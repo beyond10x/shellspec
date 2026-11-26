@@ -14,7 +14,7 @@ fn text(input: &str, span: Span) -> &str {
 
 #[test]
 fn and_binds_looser_than_pipe() {
-    // tree-sitter-bash nests this as `(a && b 2>&1) | c` (docs/design.md § 5.3).
+    // tree-sitter-bash nests this as `(a && b 2>&1) | c` (design/design.md § 5.3).
     let s = zsh("a && b 2>&1 | c");
     let Node::AndOr(a) = only(&s) else {
         panic!("{s:#?}")

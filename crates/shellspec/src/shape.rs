@@ -1,4 +1,4 @@
-//! The redacted shape of a script (docs/design.md § 7.1): node kinds, operators, program names
+//! The redacted shape of a script (design/design.md § 7.1): node kinds, operators, program names
 //! the built-in ruleset knows, subcommand paths, flag names and word kinds. It holds no value
 //! of the input: an unknown program is `<prog>`, an operand `<arg>`, `<path>` or `<n>`, a flag's
 //! value `<v>`, a dynamic word `<$>`.

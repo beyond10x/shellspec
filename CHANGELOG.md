@@ -12,4 +12,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `shape` gives the redacted form of a script, with no value of the input.
 - A ruleset in the `shellspec-rules/1` YAML format with a digest; `shellspec rules check` refuses ties and wrappers without arity.
 - The `shellspec` binary: `lift`, `invocations`, `shape`, `rules check` and `corpus stats`.
-- A documentation site with the design and the corpus research.
+- A documentation site for users: getting started, dialects, the record, rules and categories, and use from another tool.

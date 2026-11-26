@@ -1,7 +1,7 @@
 domain: shellspec.classification
 
 summary: >-
-  The closed category list and the ruleset that assigns it (docs/design.md § 6). A ruleset is data,
+  The closed category list and the ruleset that assigns it (design/design.md § 6). A ruleset is data,
   `rules/*.yaml`; its digest is reported with every classification.
 
 types:

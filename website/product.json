@@ -3,22 +3,22 @@
   "product": {
     "name": "shellspec",
     "mark": "S",
-    "eyebrow": "Shell command IR · no release yet",
+    "eyebrow": "Shell command records · no release yet",
     "promise": [
       "One shell command string in,",
-      "one IR and a category per command out."
+      "every command in it, classified."
     ],
-    "lede": "An agent's Bash tool sends a whole script in one string: cd x && cargo test 2>&1 | tail. shellspec lifts that string from bash, POSIX sh, zsh or fish into one IR of lists, pipelines, simple commands, redirects, heredocs and substitutions, and gives every simple command a category from a declared ruleset. Lifting is pure: nothing is executed, expanded or globbed.",
-    "description": "A Rust library and CLI that lifts shell command strings from bash, sh, zsh and fish into one IR and classifies every simple command with a declared ruleset.",
+    "lede": "A coding agent's shell tool sends a whole script in one string: cd app && cargo test 2>&1 | tail. shellspec lifts that string from bash, sh, zsh or fish into one tree, lists every simple command in the order the shell runs it, and gives each a category such as navigate, test or filter. Nothing is executed, expanded or globbed.",
+    "description": "A Rust library and CLI that lifts shell command strings from bash, sh, zsh and fish into one tree and classifies every simple command with a ruleset you can extend.",
     "actions": [
       {
-        "label": "Design",
-        "href": "/docs/",
+        "label": "Get started",
+        "href": "/docs/getting-started",
         "kind": "primary"
       },
       {
-        "label": "Corpus research",
-        "href": "/docs/research/corpus"
+        "label": "Rules and categories",
+        "href": "/docs/rules"
       }
     ],
     "meta": "No release yet · Apache-2.0"
@@ -26,47 +26,47 @@
   "sections": [
     {
       "kind": "flow",
-      "eyebrow": "The pipeline",
-      "title": "From a string to a categorised list.",
-      "lede": "Each step is a function of the library and a command of the shellspec binary.",
+      "eyebrow": "How it works",
+      "title": "From a string to a classified list.",
+      "lede": "Each step is a function of the library and a command of the shellspec tool.",
       "steps": [
         {
           "label": "lift",
           "title": "Parse in a dialect",
-          "description": "lift(text, dialect) returns a Script; input that does not parse becomes Unk nodes with diagnostics, never an error."
+          "description": "lift returns the tree of one command string. Input that does not parse becomes unk nodes with a reason, never an error."
         },
         {
           "label": "invocations",
-          "title": "Flatten and classify",
-          "description": "invocations(script, ruleset) lists every simple command with its wrappers, pipe stage, cwd and category."
+          "title": "List and classify",
+          "description": "invocations lists every simple command with its wrappers, pipe stage, guard, working directory and category."
         },
         {
           "label": "shape",
           "title": "Redact",
-          "description": "shape(script) keeps node kinds, programs, subcommands and flag names, and drops the words."
+          "description": "shape keeps programs, subcommands and flags, and replaces every value with a placeholder."
         }
       ]
     },
     {
       "kind": "features",
-      "eyebrow": "Built",
-      "title": "What the repository holds.",
-      "lede": "Specification first: every noun is declared in an ESS specification before code uses it.",
+      "eyebrow": "Documentation",
+      "title": "Start here.",
+      "lede": "Six short pages.",
       "items": [
         {
-          "title": "IR",
-          "description": "shell-ir/1, declared in spec/ and projected to JSON Schema in generated/.",
-          "href": "/docs/"
+          "title": "Dialects",
+          "description": "bash, sh, zsh and fish in one tree, nested scripts, and what becomes unk.",
+          "href": "/docs/dialects"
         },
         {
-          "title": "Ruleset",
-          "description": "YAML rules with a digest; rules check refuses ties and wrappers without arity.",
-          "href": "/docs/"
+          "title": "The record",
+          "description": "The tree, the words, the invocation list and the dominant invocation.",
+          "href": "/docs/record"
         },
         {
-          "title": "Corpus",
-          "description": "The counts the design rests on: operators, pipes, first words, parser refusals.",
-          "href": "/docs/research/corpus"
+          "title": "Integrating",
+          "description": "The library, JSON output for other languages, and storing records without values.",
+          "href": "/docs/integrating"
         }
       ]
     }

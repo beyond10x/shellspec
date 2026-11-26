@@ -14,7 +14,8 @@ simple command in it a category.
   `navigate`, …) from a declared YAML ruleset with a digest, so a change of the rules is visible
   in every result.
 
-Documentation: <https://beyond10x.github.io/shellspec/> (the design and the corpus research).
+Documentation: <https://beyond10x.github.io/shellspec/> (getting started, dialects, the record,
+rules and categories, use from another tool).
 
 ## Library
 

@@ -4,13 +4,13 @@
   "x-ess-provenance": {
     "system": "shellspec",
     "specification_version": "v1",
-    "contract_digest": "slice-sha256/2:c10677dc12023ccaf9d733f593cccbd4436f2251ed220d89a99c7ec0018a2b15",
+    "contract_digest": "slice-sha256/2:160ace45edd88ae87bd98f6014c825aea0c32a5b0824c1dffb48ee586f967a8d",
     "regenerate": "ess generate"
   },
   "$defs": {
     "shellspec.syntax.UnkReason": {
       "title": "UnkReason",
-      "description": "Why shellspec could not say (docs/design.md § 3.3): a region the parser refused, a construct of another dialect, a dynamic program word, a static program no rule names, a nested script deeper than 3.",
+      "description": "Why shellspec could not say (design/design.md § 3.3): a region the parser refused, a construct of another dialect, a dynamic program word, a static program no rule names, a nested script deeper than 3.",
       "x-ess-name": "shellspec.syntax.UnkReason",
       "x-ess-kind": "enum",
       "type": "string",

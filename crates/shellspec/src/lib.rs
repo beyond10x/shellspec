@@ -1,6 +1,6 @@
 //! shellspec lifts one shell command string, as an agent's Bash tool sends it, into one IR
 //! (`shell-ir/1`) from bash, POSIX sh, zsh or fish syntax, and gives each simple command in it a
-//! category (docs/design.md). Lifting is pure: it never executes, expands or globs anything.
+//! category (design/design.md). Lifting is pure: it never executes, expands or globs anything.
 //!
 //! ```text
 //! use shellspec::{Dialect, Ruleset, Category, invocations, lift};

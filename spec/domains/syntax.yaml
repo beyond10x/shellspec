@@ -1,7 +1,7 @@
 domain: shellspec.syntax
 
 summary: >-
-  One shell command string lifted into one tree, `shell-ir/1` (docs/design.md § 3). Every node
+  One shell command string lifted into one tree, `shell-ir/1` (design/design.md § 3). Every node
   carries the byte range of the input it was lifted from. A region no parser accepted is an `Unk`
   node with a digest and a length, never its text.
 
@@ -31,7 +31,7 @@ types:
     variants: [syntax, dialect, dynamic, no_rule, depth]
     naming:
       summary: >-
-        Why shellspec could not say (docs/design.md § 3.3): a region the parser refused, a
+        Why shellspec could not say (design/design.md § 3.3): a region the parser refused, a
         construct of another dialect, a dynamic program word, a static program no rule names, a
         nested script deeper than 3.
 

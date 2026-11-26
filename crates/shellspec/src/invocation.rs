@@ -1,4 +1,4 @@
-//! The flat view (docs/design.md § 3.4, `spec/domains/invocation.yaml`): one [`Invocation`] per
+//! The flat view (design/design.md § 3.4, `spec/domains/invocation.yaml`): one [`Invocation`] per
 //! simple command, in execution order, classified by a [`Ruleset`] (§ 6.2).
 
 use std::collections::HashSet;
