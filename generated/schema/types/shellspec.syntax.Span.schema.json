@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.syntax.Span",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:e3129932363c7e323c8552d45026d8a2e7ed77caa99361c0495e2340920bff6a",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.syntax.Span": {
+      "title": "Span",
+      "description": "A byte range of the input, start inclusive, end exclusive.",
+      "x-ess-name": "shellspec.syntax.Span",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "integer"
+        },
+        "end": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

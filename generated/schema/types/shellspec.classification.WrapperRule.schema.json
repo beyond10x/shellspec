@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.classification.WrapperRule",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:dc57f82d83341bdbb36ba02516d3ef2ee666766d1208d039729516d7ef6c88d6",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.Implied": {
+      "title": "Implied",
+      "description": "`b10x-gates bot -- commit …` runs `git commit …`: after `bot`, the program is `git`.",
+      "x-ess-name": "shellspec.classification.Implied",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "after": {
+          "type": "string"
+        },
+        "program": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "after",
+        "program"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.classification.WrapperRule": {
+      "title": "WrapperRule",
+      "description": "A program that runs the program after it (§ 6.2 step 1). It takes its flags, then `positionals` words, then words up to and including `until`; `assignments` takes `X=y` words. It is no wrapper when the next word is in `unless_next`; a word of `skip_next` right after it is taken too. When one of its words is the `after` of an `implies` entry, the words after the wrapper are arguments of that entry's program.",
+      "x-ess-name": "shellspec.classification.WrapperRule",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "flags_with_value": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "positionals": {
+          "type": "integer"
+        },
+        "until": {
+          "type": "string"
+        },
+        "assignments": {
+          "type": "boolean"
+        },
+        "unless_next": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skip_next": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "implies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.classification.Implied"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "names"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

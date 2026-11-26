@@ -1,0 +1,136 @@
+domain: shellspec.classification
+
+summary: >-
+  The closed category list and the ruleset that assigns it (docs/design.md § 6). A ruleset is data,
+  `rules/*.yaml`; its digest is reported with every classification.
+
+types:
+  - name: shellspec.classification.Category
+    kind: enum
+    variants:
+      - navigate
+      - read
+      - list
+      - search
+      - filter
+      - output
+      - edit
+      - build
+      - test
+      - lint
+      - run
+      - vcs
+      - forge
+      - network
+      - package
+      - process
+      - environment
+      - system
+      - container
+      - tool
+      - unk
+
+  - name: shellspec.classification.Effect
+    kind: enum
+    variants: [fs_read, fs_write, fs_delete, net_out, remote_write, process_signal, exec, stdin, wait]
+
+  - name: shellspec.classification.RulesetDigest
+    kind: newtype
+    of: String
+    naming:
+      summary: "`sha256:` and the hex digest over every rules file, by name, in name order."
+
+  - name: shellspec.classification.NestedKind
+    kind: enum
+    variants: [shell_c, eval, ssh]
+    naming:
+      summary: How a program carries a script of its own (§ 3.2).
+
+  - name: shellspec.classification.WrapperRule
+    kind: struct
+    naming:
+      summary: >-
+        A program that runs the program after it (§ 6.2 step 1). It takes its flags, then
+        `positionals` words, then words up to and including `until`; `assignments` takes `X=y`
+        words. It is no wrapper when the next word is in `unless_next`; a word of `skip_next`
+        right after it is taken too. When one of its words is the `after` of an `implies` entry,
+        the words after the wrapper are arguments of that entry's program.
+    fields:
+      - {name: id, type: String}
+      - {name: names, type: List<String>}
+      - {name: flags_with_value, type: Optional<List<String>>}
+      - {name: positionals, type: Optional<Integer>}
+      - {name: until, type: Optional<String>}
+      - {name: assignments, type: Optional<Boolean>}
+      - {name: unless_next, type: Optional<List<String>>}
+      - {name: skip_next, type: Optional<List<String>>}
+      - {name: implies, type: Optional<List<shellspec.classification.Implied>>}
+
+  - name: shellspec.classification.Implied
+    kind: struct
+    naming:
+      summary: "`b10x-gates bot -- commit …` runs `git commit …`: after `bot`, the program is `git`."
+    fields:
+      - {name: after, type: String}
+      - {name: program, type: String}
+
+  - name: shellspec.classification.ProgramRule
+    kind: struct
+    naming:
+      summary: >-
+        How a program's words are read: its flags that take a value, prefixes of words to skip
+        (`cargo +toolchain`), and how many positionals form its subcommand path.
+    fields:
+      - {name: names, type: List<String>}
+      - {name: flags_with_value, type: Optional<List<String>>}
+      - {name: skip_prefix, type: Optional<List<String>>}
+      - {name: subcommands, type: Optional<Integer>}
+
+  - name: shellspec.classification.StreamRule
+    kind: struct
+    naming:
+      summary: >-
+        A program that is a filter when it has no file operand (§ 6.2 step 5). The first
+        `operands_before_files` positionals are no file (a pattern, a script), unless one of
+        `pattern_flags` gave the pattern (`grep -e x f`).
+    fields:
+      - {name: file_category, type: shellspec.classification.Category}
+      - {name: operands_before_files, type: Integer}
+      - {name: pattern_flags, type: Optional<List<String>>}
+
+  - name: shellspec.classification.ScriptCase
+    kind: struct
+    naming:
+      summary: A script name (`test*` is a prefix) of `npm run <script>` or `task <name>` and its category.
+    fields:
+      - {name: pattern, type: String}
+      - {name: category, type: shellspec.classification.Category}
+
+  - name: shellspec.classification.Rule
+    kind: struct
+    naming:
+      summary: >-
+        One classification. It matches a program name, a subcommand prefix and flag conditions;
+        the most specific match wins (§ 6.2 step 6).
+    fields:
+      - {name: id, type: String}
+      - {name: program, type: List<String>}
+      - {name: sub, type: Optional<List<String>>}
+      - {name: flags_any, type: Optional<List<String>>}
+      - {name: flags_none, type: Optional<List<String>>}
+      - {name: category, type: shellspec.classification.Category}
+      - {name: operation, type: Optional<String>}
+      - {name: effects, type: Optional<List<shellspec.classification.Effect>>}
+      - {name: stream, type: Optional<shellspec.classification.StreamRule>}
+      - {name: scripts, type: Optional<List<shellspec.classification.ScriptCase>>}
+      - {name: nested, type: Optional<shellspec.classification.NestedKind>}
+
+  - name: shellspec.classification.RulesFile
+    kind: struct
+    naming:
+      summary: One `rules/*.yaml` file.
+    fields:
+      - {name: format, type: String}
+      - {name: wrappers, type: Optional<List<shellspec.classification.WrapperRule>>}
+      - {name: programs, type: Optional<List<shellspec.classification.ProgramRule>>}
+      - {name: rules, type: Optional<List<shellspec.classification.Rule>>}

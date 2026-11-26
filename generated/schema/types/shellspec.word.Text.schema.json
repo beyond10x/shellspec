@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.word.Text",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:dfb839ff178ca98880ddb11028c5fc3cee42f840d9a29d81158bcc16e8ef27de",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.word.Text": {
+      "title": "Text",
+      "x-ess-name": "shellspec.word.Text",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

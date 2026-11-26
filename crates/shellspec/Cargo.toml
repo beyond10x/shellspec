@@ -1,0 +1,32 @@
+[package]
+name = "shellspec"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+autotests = false
+
+[lib]
+name = "shellspec"
+path = "src/lib.rs"
+test = false
+doctest = false
+
+[[bin]]
+name = "shellspec"
+path = "src/main.rs"
+test = false
+
+[[test]]
+name = "main"
+path = "tests/main.rs"
+
+[dependencies]
+shellspec-cli-contract.workspace = true
+brush-parser.workspace = true
+tree-sitter.workspace = true
+tree-sitter-fish.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_norway.workspace = true
+sha2.workspace = true

@@ -1,0 +1,111 @@
+domain: shellspec.word
+
+summary: >-
+  Words and redirects (docs/design.md § 3). A word is a list of parts that keep what the shell
+  would do with them without doing it. A word is static when every part is literal or quoted text
+  without expansion; only then is its value known.
+
+types:
+  - name: shellspec.word.Text
+    kind: struct
+    fields:
+      - {name: text, type: String}
+
+  - name: shellspec.word.DQuoted
+    kind: struct
+    fields:
+      - {name: parts, type: List<shellspec.word.WordPart>}
+
+  - name: shellspec.word.Param
+    kind: struct
+    naming:
+      summary: "`$x`, `${x:-y}`. `op` names the expansion operator when there is one."
+    fields:
+      - {name: name, type: String}
+      - {name: op, type: Optional<String>}
+
+  - name: shellspec.word.SubForm
+    kind: enum
+    variants: [dollar, backtick, fish_paren]
+
+  - name: shellspec.word.CmdSub
+    kind: struct
+    fields:
+      - {name: body, type: shellspec.syntax.Script}
+      - {name: form, type: shellspec.word.SubForm}
+
+  - name: shellspec.word.ProcDir
+    kind: enum
+    variants: [in, out, file]
+    naming:
+      summary: "`<(…)` is in, `>(…)` out, zsh `=(…)` file."
+
+  - name: shellspec.word.ProcSub
+    kind: struct
+    fields:
+      - {name: body, type: shellspec.syntax.Script}
+      - {name: dir, type: shellspec.word.ProcDir}
+
+  - name: shellspec.word.WordPart
+    kind: union
+    tag: kind
+    variants:
+      Lit: shellspec.word.Text
+      SQuoted: shellspec.word.Text
+      DQuoted: shellspec.word.DQuoted
+      AnsiC: shellspec.word.Text
+      Param: shellspec.word.Param
+      CmdSub: shellspec.word.CmdSub
+      ProcSub: shellspec.word.ProcSub
+      ArithSub: shellspec.word.Text
+      Glob: shellspec.word.Text
+      Brace: shellspec.word.Text
+      Tilde: shellspec.word.Text
+
+  - name: shellspec.word.Word
+    kind: struct
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - name: raw
+        type: String
+        summary: The word as written.
+      - {name: parts, type: List<shellspec.word.WordPart>}
+      - name: static_value
+        type: Optional<String>
+        summary: The value of a static word; absent for a dynamic one.
+
+  - name: shellspec.word.RedirectOp
+    kind: enum
+    variants: [in, out, append, clobber, out_noclobber, inout, dup_out, dup_in, both, herestring, heredoc]
+
+  - name: shellspec.word.Heredoc
+    kind: struct
+    naming:
+      summary: A quoted delimiter makes the body literal; an unquoted one keeps substitutions as parts.
+    fields:
+      - {name: delimiter, type: String}
+      - {name: quoted, type: Boolean}
+      - {name: strip_tabs, type: Boolean}
+      - {name: body, type: shellspec.word.Word}
+
+  - name: shellspec.word.FdTarget
+    kind: struct
+    fields:
+      - {name: fd, type: Integer}
+
+  - name: shellspec.word.RedirectTarget
+    kind: union
+    tag: kind
+    variants:
+      File: shellspec.word.Word
+      Fd: shellspec.word.FdTarget
+      Heredoc: shellspec.word.Heredoc
+      ProcSub: shellspec.word.ProcSub
+
+  - name: shellspec.word.Redirect
+    kind: struct
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: fd, type: Optional<Integer>}
+      - {name: op, type: shellspec.word.RedirectOp}
+      - {name: target, type: shellspec.word.RedirectTarget}

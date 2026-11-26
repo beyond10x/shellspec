@@ -1,0 +1,26 @@
+Lift shell command strings into one IR and categorise every simple command
+
+Usage: shellspec [OPTIONS] <COMMAND>
+
+Commands:
+  corpus       
+  invocations  Print every simple command of one command string, in execution order, with its category
+  lift         Print the shell-ir/1 tree of one command string
+  rules        
+  shape        Print the redacted shape of one command string
+  completions  Emit shell completions
+  help         Print this message or the help of the given subcommand(s)
+
+Options:
+      --config <global_config>
+          
+
+      --state-dir <global_state>
+          
+
+      --output <global_output>
+          [default: human]
+          [possible values: human, json]
+
+  -h, --help
+          Print help

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.invocation.StageRole",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:216fc54404b7d77c1314591a980ca65c0e6d65c878324afce49e65ba594bd635",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.invocation.StageRole": {
+      "title": "StageRole",
+      "x-ess-name": "shellspec.invocation.StageRole",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "alone",
+        "head",
+        "middle",
+        "tail"
+      ]
+    }
+  }
+}

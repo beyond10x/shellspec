@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.syntax.Unk",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:11c316a1057d574b4f7b660c5f02722b701611a01358d74d5e42e84a06b74519",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.syntax.ParserId": {
+      "title": "ParserId",
+      "description": "The parser and its version that produced a script or refused a region, `brush-parser/0.4.0`.",
+      "x-ess-name": "shellspec.syntax.ParserId",
+      "x-ess-kind": "newtype",
+      "type": "string"
+    },
+    "shellspec.syntax.Span": {
+      "title": "Span",
+      "description": "A byte range of the input, start inclusive, end exclusive.",
+      "x-ess-name": "shellspec.syntax.Span",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "integer"
+        },
+        "end": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Unk": {
+      "title": "Unk",
+      "description": "A region shellspec could not lift; its text is kept only as a digest and a length.",
+      "x-ess-name": "shellspec.syntax.Unk",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "text_digest": {
+          "description": "sha256 of the region's bytes, lower-case hex.",
+          "type": "string"
+        },
+        "len": {
+          "type": "integer"
+        },
+        "reason": {
+          "$ref": "#/$defs/shellspec.syntax.UnkReason"
+        },
+        "parser": {
+          "$ref": "#/$defs/shellspec.syntax.ParserId"
+        }
+      },
+      "required": [
+        "span",
+        "text_digest",
+        "len",
+        "reason",
+        "parser"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.UnkReason": {
+      "title": "UnkReason",
+      "description": "Why shellspec could not say (docs/design.md § 3.3): a region the parser refused, a construct of another dialect, a dynamic program word, a static program no rule names, a nested script deeper than 3.",
+      "x-ess-name": "shellspec.syntax.UnkReason",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "syntax",
+        "dialect",
+        "dynamic",
+        "no_rule",
+        "depth"
+      ]
+    }
+  }
+}

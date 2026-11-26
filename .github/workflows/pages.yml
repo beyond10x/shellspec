@@ -1,0 +1,207 @@
+name: Documentation validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    outputs:
+      class: ${{ steps.changes.outputs.class }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - name: List the changed files
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/changed-files"
+          : > "$out"
+          case "$EVENT" in
+            pull_request) git diff --no-renames --name-only HEAD^1 HEAD > "$out" ;;
+            push)
+              if [ -n "$BEFORE" ] && [ "$BEFORE" != 0000000000000000000000000000000000000000 ] \
+                && git fetch --no-tags --depth=1 origin "$BEFORE" \
+                && git diff --no-renames --name-only "$BEFORE" HEAD > "$out"; then :; else : > "$out"; fi
+              ;;
+          esac
+          echo "CHANGED_FILES=$out" >> "$GITHUB_ENV"
+          cat "$out"
+      - name: Classify the changed files
+        id: changes
+        run: |
+          set -euo pipefail
+          planning=0 site=0 code=0
+          while IFS= read -r f || [ -n "$f" ]; do
+            case "$f" in
+              '') ;;
+              .engineering/*) planning=1 ;;
+              website/* | docs/* | research/*) site=1 ;;
+              crates/* | spec/* | generated/*) code=1 ;;
+              *.md) planning=1 ;;
+              *) code=1 ;;
+            esac
+          done < "${CHANGED_FILES:-/dev/stdin}"
+          if [ "$code" = 1 ] || [ "$planning$site" = 00 ]; then class=code
+          elif [ "$site" = 1 ]; then class=docs-site
+          else class=planning
+          fi
+          echo "class=$class" >> "$GITHUB_OUTPUT"
+          echo "change class: $class"
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        if: steps.changes.outputs.class != 'planning'
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - name: Build the Docusaurus site
+        if: steps.changes.outputs.class != 'planning'
+        run: npm --prefix website ci && npm --prefix website run build
+      - name: Refuse a site that holds a machine path
+        if: steps.changes.outputs.class != 'planning'
+        run: |
+          set -euo pipefail
+          if grep -rIl -e '/home/' -e '/Users/' website/build; then echo "website/build holds a machine path"; exit 1; fi
+      - name: Declare what was built
+        if: steps.changes.outputs.class != 'planning'
+        env:
+          COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          case "$COMMIT" in *[!0-9a-f]*|'') exit 1 ;; esac
+          test "${#COMMIT}" -eq 40
+          test -f website/build/index.html
+          mkdir -p website/build/.well-known
+          jq -n --arg commit "$COMMIT" \
+            '{schema: "b10x-project-site/v1", repository: "shellspec", commit: $commit, baseUrl: "/shellspec/"}' \
+            > website/build/.well-known/b10x-site.json
+          cat website/build/.well-known/b10x-site.json
+      - name: Upload the exact built site
+        if: steps.changes.outputs.class != 'planning' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: b10x-project-site
+          path: website/build
+          include-hidden-files: true
+          retention-days: 30
+          if-no-files-found: error
+
+  gate:
+    name: Repository gate
+    needs: build
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Read the change class of the job build
+        id: class
+        env:
+          CHANGE_CLASS: ${{ needs.build.outputs.class }}
+        run: |
+          set -euo pipefail
+          # code: the whole gate. docs-site and planning: nothing; the job build builds the site.
+          case "$CHANGE_CLASS" in
+            code) task=check ;;
+            docs-site) task=none ;;
+            planning) task=none ;;
+            *) echo "the job build gave no change class"; exit 1 ;;
+          esac
+          echo "task=$task" >> "$GITHUB_OUTPUT"
+          echo "change class: $CHANGE_CLASS; the job runs the task: $task"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        if: steps.class.outputs.task != 'none'
+        with:
+          persist-credentials: false
+      - name: Read the rustc pinned in rust-toolchain.toml
+        id: rustc
+        if: steps.class.outputs.task == 'check'
+        run: |
+          set -euo pipefail
+          channel=$(sed -n 's/^channel = "\(.*\)"$/\1/p' rust-toolchain.toml)
+          test -n "$channel"
+          echo "channel=$channel" >> "$GITHUB_OUTPUT"
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249
+        if: steps.class.outputs.task == 'check'
+        with:
+          toolchain: ${{ steps.rustc.outputs.channel }}
+          components: rustfmt, clippy
+      - name: Show the rustc the gate builds with
+        if: steps.class.outputs.task == 'check'
+        env:
+          CHANNEL: ${{ steps.rustc.outputs.channel }}
+        run: |
+          set -euo pipefail
+          rustc --version
+          rustc --version | grep -F "rustc $CHANNEL "
+      - name: Install task
+        if: steps.class.outputs.task != 'none'
+        env:
+          GO_TASK_VERSION: "3.54.0"
+          GO_TASK_SHA256: 680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb
+        run: |
+          set -euo pipefail
+          asset=task_linux_amd64.tar.gz
+          mkdir -p "$RUNNER_TEMP/task"
+          cd "$RUNNER_TEMP/task"
+          curl --fail --silent --show-error --location --output "$asset" \
+            "https://github.com/go-task/task/releases/download/v$GO_TASK_VERSION/$asset"
+          echo "$GO_TASK_SHA256  $asset" | sha256sum --check --strict
+          tar -xzf "$asset" task
+          echo "$RUNNER_TEMP/task" >> "$GITHUB_PATH"
+          ./task --version | grep -Fx "$GO_TASK_VERSION"
+      - name: Install cargo-nextest
+        if: steps.class.outputs.task == 'check'
+        env:
+          NEXTEST_VERSION: "0.9.143"
+          NEXTEST_SHA256: 66786b9abe23920d022a182d1416b1bbc8130dd4872a9553d76985a1708dcd1e
+        run: |
+          set -euo pipefail
+          asset="cargo-nextest-$NEXTEST_VERSION-x86_64-unknown-linux-gnu.tar.gz"
+          mkdir -p "$RUNNER_TEMP/nextest"
+          cd "$RUNNER_TEMP/nextest"
+          curl --fail --silent --show-error --location --output "$asset" \
+            "https://github.com/nextest-rs/nextest/releases/download/cargo-nextest-$NEXTEST_VERSION/$asset"
+          echo "$NEXTEST_SHA256  $asset" | sha256sum --check --strict
+          tar -xzf "$asset" cargo-nextest
+          echo "$RUNNER_TEMP/nextest" >> "$GITHUB_PATH"
+          ./cargo-nextest --version | grep -F "cargo-nextest $NEXTEST_VERSION "
+      - name: Install ess
+        if: steps.class.outputs.task != 'none'
+        env:
+          ESS_VERSION: "0.99.2"
+          ESS_SHA256: 8b32cb02ac156929a873f4a1faf4c8c6d686d45565ce567ce2d360b9072dc42e
+        run: |
+          set -euo pipefail
+          name="ess-$ESS_VERSION-x86_64-unknown-linux-gnu"
+          cd "$RUNNER_TEMP"
+          curl --fail --silent --show-error --location --output "$name.tar.gz" \
+            "https://github.com/beyond10x/ess/releases/download/$ESS_VERSION/$name.tar.gz"
+          echo "$ESS_SHA256  $name.tar.gz" | sha256sum --check --strict
+          tar -xzf "$name.tar.gz"
+          echo "$RUNNER_TEMP/$name" >> "$GITHUB_PATH"
+          "./$name/ess" --version | grep -Fx "ess $ESS_VERSION"
+      - name: Run the repository gate
+        if: steps.class.outputs.task != 'none'
+        env:
+          GATE_TASK: ${{ steps.class.outputs.task }}
+        run: task "$GATE_TASK"

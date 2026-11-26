@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.syntax.Separator",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:8a287d5839539063d83087f01076728b545d8052de2619edd9790b67e29c625f",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.syntax.Separator": {
+      "title": "Separator",
+      "description": "What ends a statement; `amp` runs it in the background, `end` is the end of the list.",
+      "x-ess-name": "shellspec.syntax.Separator",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "newline",
+        "semi",
+        "amp",
+        "end"
+      ]
+    }
+  }
+}

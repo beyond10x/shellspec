@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.invocation.Guard",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:25dac8e3aefb8574be12ce7b3d76fad6ac393a4749734ad96edaf33714ef3302",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.invocation.Guard": {
+      "title": "Guard",
+      "description": "Runs only if the invocation at index `after` succeeded (and) or failed (or).",
+      "x-ess-name": "shellspec.invocation.Guard",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "op": {
+          "$ref": "#/$defs/shellspec.syntax.AndOrOp"
+        },
+        "after": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "op",
+        "after"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.AndOrOp": {
+      "title": "AndOrOp",
+      "x-ess-name": "shellspec.syntax.AndOrOp",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "and",
+        "or"
+      ]
+    }
+  }
+}

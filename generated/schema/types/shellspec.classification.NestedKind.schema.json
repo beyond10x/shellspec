@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.classification.NestedKind",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:880cbddc1a98f7f6f7c2aa955d4c938f57421df597c0792f376e41e9bf2ab8d6",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.NestedKind": {
+      "title": "NestedKind",
+      "description": "How a program carries a script of its own (§ 3.2).",
+      "x-ess-name": "shellspec.classification.NestedKind",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "shell_c",
+        "eval",
+        "ssh"
+      ]
+    }
+  }
+}

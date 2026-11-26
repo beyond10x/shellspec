@@ -1,0 +1,692 @@
+{
+  "format": "ess-cli-plan/2",
+  "binary": "shellspec",
+  "about": "Lift shell command strings into one IR and categorise every simple command",
+  "globals": {
+    "config": "config",
+    "state": "state-dir",
+    "output": "output"
+  },
+  "callables": {
+    "corpus_stats": {
+      "target": {
+        "kind": "local",
+        "owner": "shellspec.cli",
+        "action": "corpus_stats"
+      },
+      "input": {
+        "type_ref": "shellspec.cli.CorpusStatsInput",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "dialect": {
+              "kind": "enum",
+              "variants": [
+                "bash",
+                "sh",
+                "zsh",
+                "fish"
+              ]
+            },
+            "input": {
+              "kind": "string"
+            },
+            "ruleset": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            }
+          }
+        }
+      },
+      "result": {
+        "type_ref": "shellspec.cli.CorpusStats",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "categories": {
+              "kind": "list",
+              "of": {
+                "kind": "struct",
+                "fields": {
+                  "count": {
+                    "kind": "integer"
+                  },
+                  "key": {
+                    "kind": "string"
+                  }
+                }
+              }
+            },
+            "commands": {
+              "kind": "integer"
+            },
+            "dominant": {
+              "kind": "list",
+              "of": {
+                "kind": "struct",
+                "fields": {
+                  "count": {
+                    "kind": "integer"
+                  },
+                  "key": {
+                    "kind": "string"
+                  }
+                }
+              }
+            },
+            "invocations": {
+              "kind": "integer"
+            },
+            "refused": {
+              "kind": "integer"
+            },
+            "ruleset": {
+              "kind": "string"
+            },
+            "unk_invocations": {
+              "kind": "integer"
+            },
+            "unk_permille": {
+              "kind": "integer"
+            },
+            "unk_programs": {
+              "kind": "list",
+              "of": {
+                "kind": "struct",
+                "fields": {
+                  "count": {
+                    "kind": "integer"
+                  },
+                  "key": {
+                    "kind": "string"
+                  }
+                }
+              }
+            },
+            "unk_reasons": {
+              "kind": "list",
+              "of": {
+                "kind": "struct",
+                "fields": {
+                  "count": {
+                    "kind": "integer"
+                  },
+                  "key": {
+                    "kind": "string"
+                  }
+                }
+              }
+            },
+            "unk_regions": {
+              "kind": "integer"
+            }
+          }
+        }
+      },
+      "errors": {
+        "input_unreadable": {
+          "type_ref": "shellspec.cli.Refusal",
+          "shape": {
+            "kind": "struct",
+            "fields": {
+              "detail": {
+                "kind": "string"
+              }
+            }
+          }
+        },
+        "ruleset_invalid": {
+          "type_ref": "shellspec.cli.Refusal",
+          "shape": {
+            "kind": "struct",
+            "fields": {
+              "detail": {
+                "kind": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "invocations": {
+      "target": {
+        "kind": "local",
+        "owner": "shellspec.cli",
+        "action": "invocations"
+      },
+      "input": {
+        "type_ref": "shellspec.cli.InvocationsInput",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "command": {
+              "kind": "string"
+            },
+            "dialect": {
+              "kind": "enum",
+              "variants": [
+                "bash",
+                "sh",
+                "zsh",
+                "fish"
+              ]
+            },
+            "ruleset": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            }
+          }
+        }
+      },
+      "result": {
+        "type_ref": "shellspec.cli.InvocationsResult",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "dominant": {
+              "kind": "optional",
+              "of": {
+                "kind": "integer"
+              }
+            },
+            "invocations": {
+              "kind": "list",
+              "of": {
+                "kind": "struct",
+                "fields": {
+                  "argv": {
+                    "kind": "list",
+                    "of": {
+                      "kind": "json"
+                    }
+                  },
+                  "assignments": {
+                    "kind": "list",
+                    "of": {
+                      "kind": "string"
+                    }
+                  },
+                  "category": {
+                    "kind": "enum",
+                    "variants": [
+                      "navigate",
+                      "read",
+                      "list",
+                      "search",
+                      "filter",
+                      "output",
+                      "edit",
+                      "build",
+                      "test",
+                      "lint",
+                      "run",
+                      "vcs",
+                      "forge",
+                      "network",
+                      "package",
+                      "process",
+                      "environment",
+                      "system",
+                      "container",
+                      "tool",
+                      "unk"
+                    ]
+                  },
+                  "context": {
+                    "kind": "enum",
+                    "variants": [
+                      "top",
+                      "cmdsub",
+                      "procsub",
+                      "subshell",
+                      "heredoc",
+                      "nested",
+                      "loop_body",
+                      "function_body"
+                    ]
+                  },
+                  "cwd": {
+                    "kind": "optional",
+                    "of": {
+                      "kind": "string"
+                    }
+                  },
+                  "depth": {
+                    "kind": "integer"
+                  },
+                  "effects": {
+                    "kind": "list",
+                    "of": {
+                      "kind": "enum",
+                      "variants": [
+                        "fs_read",
+                        "fs_write",
+                        "fs_delete",
+                        "net_out",
+                        "remote_write",
+                        "process_signal",
+                        "exec",
+                        "stdin",
+                        "wait"
+                      ]
+                    }
+                  },
+                  "flags": {
+                    "kind": "list",
+                    "of": {
+                      "kind": "string"
+                    }
+                  },
+                  "guard": {
+                    "kind": "list",
+                    "of": {
+                      "kind": "struct",
+                      "fields": {
+                        "after": {
+                          "kind": "integer"
+                        },
+                        "op": {
+                          "kind": "enum",
+                          "variants": [
+                            "and",
+                            "or"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "index": {
+                    "kind": "integer"
+                  },
+                  "operation": {
+                    "kind": "optional",
+                    "of": {
+                      "kind": "string"
+                    }
+                  },
+                  "path": {
+                    "kind": "list",
+                    "of": {
+                      "kind": "integer"
+                    }
+                  },
+                  "program": {
+                    "kind": "optional",
+                    "of": {
+                      "kind": "string"
+                    }
+                  },
+                  "redirects": {
+                    "kind": "list",
+                    "of": {
+                      "kind": "json"
+                    }
+                  },
+                  "remote": {
+                    "kind": "boolean"
+                  },
+                  "rule": {
+                    "kind": "optional",
+                    "of": {
+                      "kind": "string"
+                    }
+                  },
+                  "stage": {
+                    "kind": "struct",
+                    "fields": {
+                      "index": {
+                        "kind": "integer"
+                      },
+                      "of": {
+                        "kind": "integer"
+                      },
+                      "pipeline": {
+                        "kind": "integer"
+                      },
+                      "role": {
+                        "kind": "enum",
+                        "variants": [
+                          "alone",
+                          "head",
+                          "middle",
+                          "tail"
+                        ]
+                      }
+                    }
+                  },
+                  "subcommand": {
+                    "kind": "list",
+                    "of": {
+                      "kind": "string"
+                    }
+                  },
+                  "unk": {
+                    "kind": "optional",
+                    "of": {
+                      "kind": "enum",
+                      "variants": [
+                        "syntax",
+                        "dialect",
+                        "dynamic",
+                        "no_rule",
+                        "depth"
+                      ]
+                    }
+                  },
+                  "wrappers": {
+                    "kind": "list",
+                    "of": {
+                      "kind": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "ruleset": {
+              "kind": "string"
+            }
+          }
+        }
+      },
+      "errors": {
+        "ruleset_invalid": {
+          "type_ref": "shellspec.cli.Refusal",
+          "shape": {
+            "kind": "struct",
+            "fields": {
+              "detail": {
+                "kind": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "lift": {
+      "target": {
+        "kind": "local",
+        "owner": "shellspec.cli",
+        "action": "lift"
+      },
+      "input": {
+        "type_ref": "shellspec.cli.LiftInput",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "command": {
+              "kind": "string"
+            },
+            "dialect": {
+              "kind": "enum",
+              "variants": [
+                "bash",
+                "sh",
+                "zsh",
+                "fish"
+              ]
+            }
+          }
+        }
+      },
+      "result": {
+        "type_ref": "shellspec.cli.LiftResult",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "format": {
+              "kind": "string"
+            },
+            "parser": {
+              "kind": "string"
+            },
+            "script": {
+              "kind": "json"
+            }
+          }
+        }
+      },
+      "errors": {}
+    },
+    "rules_check": {
+      "target": {
+        "kind": "local",
+        "owner": "shellspec.cli",
+        "action": "rules_check"
+      },
+      "input": {
+        "type_ref": "shellspec.cli.RulesCheckInput",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "ruleset": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            }
+          }
+        }
+      },
+      "result": {
+        "type_ref": "shellspec.cli.RulesCheckResult",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "files": {
+              "kind": "list",
+              "of": {
+                "kind": "string"
+              }
+            },
+            "programs": {
+              "kind": "integer"
+            },
+            "rules": {
+              "kind": "integer"
+            },
+            "ruleset": {
+              "kind": "string"
+            },
+            "wrappers": {
+              "kind": "integer"
+            }
+          }
+        }
+      },
+      "errors": {
+        "ruleset_invalid": {
+          "type_ref": "shellspec.cli.Refusal",
+          "shape": {
+            "kind": "struct",
+            "fields": {
+              "detail": {
+                "kind": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "shape": {
+      "target": {
+        "kind": "local",
+        "owner": "shellspec.cli",
+        "action": "shape"
+      },
+      "input": {
+        "type_ref": "shellspec.cli.ShapeInput",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "command": {
+              "kind": "string"
+            },
+            "dialect": {
+              "kind": "enum",
+              "variants": [
+                "bash",
+                "sh",
+                "zsh",
+                "fish"
+              ]
+            }
+          }
+        }
+      },
+      "result": {
+        "type_ref": "shellspec.cli.ShapeResult",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "shape": {
+              "kind": "string"
+            }
+          }
+        }
+      },
+      "errors": {}
+    }
+  },
+  "commands": [
+    {
+      "path": [
+        "corpus",
+        "stats"
+      ],
+      "aliases": [],
+      "callable": "corpus_stats",
+      "about": "Count parse refusals, categories and unk over a JSON-lines file of commands",
+      "arguments": [
+        {
+          "field": "input",
+          "source": {
+            "kind": "option",
+            "long": "input"
+          }
+        },
+        {
+          "field": "dialect",
+          "source": {
+            "kind": "option",
+            "long": "dialect"
+          }
+        },
+        {
+          "field": "ruleset",
+          "source": {
+            "kind": "option",
+            "long": "ruleset"
+          }
+        }
+      ]
+    },
+    {
+      "path": [
+        "invocations"
+      ],
+      "aliases": [],
+      "callable": "invocations",
+      "about": "Print every simple command of one command string, in execution order, with its category",
+      "arguments": [
+        {
+          "field": "dialect",
+          "source": {
+            "kind": "option",
+            "long": "dialect"
+          }
+        },
+        {
+          "field": "command",
+          "source": {
+            "kind": "option",
+            "long": "command"
+          }
+        },
+        {
+          "field": "ruleset",
+          "source": {
+            "kind": "option",
+            "long": "ruleset"
+          }
+        }
+      ]
+    },
+    {
+      "path": [
+        "lift"
+      ],
+      "aliases": [],
+      "callable": "lift",
+      "about": "Print the shell-ir/1 tree of one command string",
+      "arguments": [
+        {
+          "field": "dialect",
+          "source": {
+            "kind": "option",
+            "long": "dialect"
+          }
+        },
+        {
+          "field": "command",
+          "source": {
+            "kind": "option",
+            "long": "command"
+          }
+        }
+      ]
+    },
+    {
+      "path": [
+        "rules",
+        "check"
+      ],
+      "aliases": [],
+      "callable": "rules_check",
+      "about": "Check a ruleset for ties, unknown categories and wrappers without arity",
+      "arguments": [
+        {
+          "field": "ruleset",
+          "source": {
+            "kind": "option",
+            "long": "ruleset"
+          }
+        }
+      ]
+    },
+    {
+      "path": [
+        "shape"
+      ],
+      "aliases": [],
+      "callable": "shape",
+      "about": "Print the redacted shape of one command string",
+      "arguments": [
+        {
+          "field": "dialect",
+          "source": {
+            "kind": "option",
+            "long": "dialect"
+          }
+        },
+        {
+          "field": "command",
+          "source": {
+            "kind": "option",
+            "long": "command"
+          }
+        }
+      ]
+    }
+  ],
+  "obligations": [
+    "handler:corpus_stats: implement the owner-qualified callable and its declared result/error contract",
+    "handler:invocations: implement the owner-qualified callable and its declared result/error contract",
+    "handler:lift: implement the owner-qualified callable and its declared result/error contract",
+    "handler:rules_check: implement the owner-qualified callable and its declared result/error contract",
+    "handler:shape: implement the owner-qualified callable and its declared result/error contract"
+  ]
+}

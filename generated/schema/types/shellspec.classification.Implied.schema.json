@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.classification.Implied",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:d062bb3364a2c8ae436bf779b5c673768c4d2b255871eecfee9682f8b07d70d9",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.Implied": {
+      "title": "Implied",
+      "description": "`b10x-gates bot -- commit …` runs `git commit …`: after `bot`, the program is `git`.",
+      "x-ess-name": "shellspec.classification.Implied",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "after": {
+          "type": "string"
+        },
+        "program": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "after",
+        "program"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,70 @@
+domain: shellspec.invocation
+
+summary: >-
+  The flat view of a script (docs/design.md § 3.4): one invocation per simple command, in
+  execution order, including those inside substitutions, subshells, compound bodies, heredoc bodies
+  and nested scripts, each with its category (§ 6).
+
+types:
+  - name: shellspec.invocation.StageRole
+    kind: enum
+    variants: [alone, head, middle, tail]
+
+  - name: shellspec.invocation.Stage
+    kind: struct
+    naming:
+      summary: The pipeline an invocation is a stage of; a command outside a pipe is the one stage of its own.
+    fields:
+      - {name: pipeline, type: Integer}
+      - {name: index, type: Integer}
+      - {name: of, type: Integer}
+      - {name: role, type: shellspec.invocation.StageRole}
+
+  - name: shellspec.invocation.Guard
+    kind: struct
+    naming:
+      summary: Runs only if the invocation at index `after` succeeded (and) or failed (or).
+    fields:
+      - {name: op, type: shellspec.syntax.AndOrOp}
+      - {name: after, type: Integer}
+
+  - name: shellspec.invocation.InvocationContext
+    kind: enum
+    variants: [top, cmdsub, procsub, subshell, heredoc, nested, loop_body, function_body]
+
+  - name: shellspec.invocation.Invocation
+    kind: struct
+    naming:
+      summary: >-
+        One simple command. `argv` and `redirects` hold `shellspec.word.Word` and
+        `shellspec.word.Redirect` values; they are `Json` here because the ess-cli/2 binding
+        projects no union.
+    fields:
+      - {name: index, type: Integer}
+      - name: path
+        type: List<Integer>
+        summary: Position in the tree, statement and child indices from the script's root.
+      - name: program
+        type: Optional<String>
+        summary: Basename of the first static word after wrappers and assignments; absent when that word is dynamic.
+      - {name: subcommand, type: List<String>}
+      - {name: wrappers, type: List<String>}
+      - {name: assignments, type: List<String>}
+      - name: flags
+        type: List<String>
+        summary: Names of the static flag words after the program, without values.
+      - {name: argv, type: List<Json>}
+      - {name: redirects, type: List<Json>}
+      - {name: stage, type: shellspec.invocation.Stage}
+      - {name: guard, type: List<shellspec.invocation.Guard>}
+      - {name: context, type: shellspec.invocation.InvocationContext}
+      - name: cwd
+        type: Optional<String>
+        summary: Working directory relative to the call's; absent once a `cd` was dynamic.
+      - {name: remote, type: Boolean}
+      - {name: depth, type: Integer}
+      - {name: category, type: shellspec.classification.Category}
+      - {name: operation, type: Optional<String>}
+      - {name: effects, type: List<shellspec.classification.Effect>}
+      - {name: rule, type: Optional<String>}
+      - {name: unk, type: Optional<shellspec.syntax.UnkReason>}

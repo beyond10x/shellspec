@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.syntax.AndOrOp",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:c5d845860a233b50ed0a14f0f43e3c4d16287edc9071e435c5f9f6c7f46947d2",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.syntax.AndOrOp": {
+      "title": "AndOrOp",
+      "x-ess-name": "shellspec.syntax.AndOrOp",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "and",
+        "or"
+      ]
+    }
+  }
+}

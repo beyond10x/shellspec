@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.invocation.InvocationContext",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:8e49a6933b1bf4628820965a67d2a7937eb790cb6e7f89a648a95542dcfdb7a8",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.invocation.InvocationContext": {
+      "title": "InvocationContext",
+      "x-ess-name": "shellspec.invocation.InvocationContext",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "top",
+        "cmdsub",
+        "procsub",
+        "subshell",
+        "heredoc",
+        "nested",
+        "loop_body",
+        "function_body"
+      ]
+    }
+  }
+}

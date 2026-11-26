@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.cli.CorpusStatsInput",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:046db277ad5a5f53399137a11170a5b801601ec12764c58d53a194b562286a19",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.cli.CorpusStatsInput": {
+      "title": "CorpusStatsInput",
+      "x-ess-name": "shellspec.cli.CorpusStatsInput",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "input": {
+          "description": "A JSON-lines file; each line a JSON string or an object with a `command` string.",
+          "type": "string"
+        },
+        "dialect": {
+          "$ref": "#/$defs/shellspec.syntax.Dialect"
+        },
+        "ruleset": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "input",
+        "dialect"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Dialect": {
+      "title": "Dialect",
+      "description": "The shell whose syntax the input is read in.",
+      "x-ess-name": "shellspec.syntax.Dialect",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "bash",
+        "sh",
+        "zsh",
+        "fish"
+      ]
+    }
+  }
+}

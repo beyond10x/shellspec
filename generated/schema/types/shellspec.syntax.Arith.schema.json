@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.syntax.Arith",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:559b204544b4e92ce92c4ce247b13a60654102204a3fd507cff618ad1aa895a0",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.syntax.Arith": {
+      "title": "Arith",
+      "description": "`(( … ))`.",
+      "x-ess-name": "shellspec.syntax.Arith",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "span",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Span": {
+      "title": "Span",
+      "description": "A byte range of the input, start inclusive, end exclusive.",
+      "x-ess-name": "shellspec.syntax.Span",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "integer"
+        },
+        "end": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.cli.ShapeInput",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:78ac1d3b862d8ab30390fb956fa51da1304852034655bfdd87c9d8eded515ba3",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.cli.ShapeInput": {
+      "title": "ShapeInput",
+      "x-ess-name": "shellspec.cli.ShapeInput",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "dialect": {
+          "$ref": "#/$defs/shellspec.syntax.Dialect"
+        },
+        "command": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "dialect",
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Dialect": {
+      "title": "Dialect",
+      "description": "The shell whose syntax the input is read in.",
+      "x-ess-name": "shellspec.syntax.Dialect",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "bash",
+        "sh",
+        "zsh",
+        "fish"
+      ]
+    }
+  }
+}

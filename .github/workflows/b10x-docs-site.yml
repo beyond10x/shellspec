@@ -1,0 +1,76 @@
+name: Documentation site
+
+on:
+  workflow_run:
+    workflows: [Documentation validation]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: b10x-docs-pages
+  cancel-in-progress: false
+
+jobs:
+  built:
+    name: Find the built site
+    if: >-
+      github.repository == 'beyond10x/shellspec'
+      && github.ref == 'refs/heads/main'
+      && (github.event_name == 'workflow_dispatch'
+        || (github.event.workflow_run.conclusion == 'success'
+          && github.event.workflow_run.event == 'push'
+          && github.event.workflow_run.head_branch == 'main'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+    outputs:
+      present: ${{ steps.artifact.outputs.present }}
+    steps:
+      - name: Look for the site artifact of the validation run
+        id: artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          set -euo pipefail
+          if [ -z "$RUN_ID" ]; then
+            RUN_ID=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/pages.yml/runs?head_sha=$SHA&branch=main&event=push&per_page=100" \
+              --jq '[.workflow_runs[] | select(.conclusion == "success")] | sort_by(.run_started_at) | last | .id // empty')
+          fi
+          n=0
+          if [ -n "$RUN_ID" ]; then
+            n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID/artifacts" \
+              --jq '[.artifacts[] | select(.name == "b10x-project-site" and .expired == false)] | length')
+          fi
+          if [ "$n" -gt 0 ]; then present=true; else present=false; echo "no built site for $SHA: a planning-only change, nothing to deploy"; fi
+          echo "present=$present" >> "$GITHUB_OUTPUT"
+
+  publish:
+    needs: built
+    if: >-
+      needs.built.outputs.present == 'true'
+      && github.actor == 'b10x-bot[bot]'
+      && github.triggering_actor == 'b10x-bot[bot]'
+      && github.repository == 'beyond10x/shellspec'
+      && github.ref == 'refs/heads/main'
+      && (github.event_name == 'workflow_dispatch'
+        || (github.event.workflow_run.conclusion == 'success'
+          && github.event.workflow_run.event == 'push'
+          && github.event.workflow_run.head_branch == 'main'))
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+      actions: read
+    uses: beyond10x/website/.github/workflows/project-site.yml@c870d2c8fa1d62c15c066a9bc382015091575734
+    with:
+      repository: shellspec
+      control_sha: ${{ github.event.workflow_run.head_sha || github.sha }}
+      route_base: /shellspec/
+      build_workflow: pages.yml
+      artifact: b10x-project-site

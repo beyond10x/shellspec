@@ -1,0 +1,103 @@
+format: shellspec-rules/1
+
+wrappers:
+  - id: wrapper.timeout
+    names: [timeout, gtimeout]
+    flags_with_value: [-s, --signal, -k, --kill-after]
+    positionals: 1
+
+  - id: wrapper.slot
+    names: [slot]
+    flags_with_value: [--tokens, --priority, --timeout, --host]
+    positionals: 0
+    unless_next: [serve, proxy, shell, gate, status, headroom, priority, run-limit, job-parallel, evict-below, cpu-limit, admission, cancel, warm, sessions, usage, cache, hook, help, --help, -h, --version, -V]
+    skip_next: [run]
+
+  - id: wrapper.env
+    names: [env]
+    flags_with_value: [-u, --unset, -C, --chdir, -S, --split-string]
+    positionals: 0
+    assignments: true
+
+  - id: wrapper.nice
+    names: [nice]
+    flags_with_value: [-n, --adjustment]
+    positionals: 0
+
+  - id: wrapper.ionice
+    names: [ionice]
+    flags_with_value: [-c, --class, -n, --classdata, -p, --pid]
+    positionals: 0
+
+  - id: wrapper.nohup
+    names: [nohup]
+    positionals: 0
+
+  - id: wrapper.setsid
+    names: [setsid]
+    positionals: 0
+
+  - id: wrapper.stdbuf
+    names: [stdbuf]
+    flags_with_value: [-i, -o, -e]
+    positionals: 0
+
+  - id: wrapper.unbuffer
+    names: [unbuffer]
+    positionals: 0
+
+  - id: wrapper.time
+    names: [time]
+    flags_with_value: [-o, --output, -f, --format]
+    positionals: 0
+
+  - id: wrapper.command
+    names: [command]
+    positionals: 0
+    unless_next: [-v, -V]
+
+  - id: wrapper.exec
+    names: [exec, builtin, noglob, nocorrect]
+    positionals: 0
+
+  - id: wrapper.sudo
+    names: [sudo]
+    flags_with_value: [-u, --user, -g, --group, -U, --other-user, -C, --close-from, -D, --chdir, -h, --host, -p, --prompt, -r, --role, -t, --type, -T, --command-timeout]
+    positionals: 0
+
+  - id: wrapper.doas
+    names: [doas]
+    flags_with_value: [-u, -C]
+    positionals: 0
+
+  - id: wrapper.b10x-gates
+    names: [b10x-gates]
+    until: "--"
+    implies:
+      - {after: bot, program: git}
+      - {after: gh, program: gh}
+
+  - id: wrapper.systemd-run
+    names: [systemd-run]
+    flags_with_value: [-p, --property, -u, --unit, --slice, -E, --setenv, --description, -M, --machine, --working-directory, -H, --host, --on-active, --on-calendar, --timer-property, --path-property, --socket-property, --uid, --gid, --nice]
+    positionals: 0
+
+  - id: wrapper.xargs
+    names: [xargs]
+    flags_with_value: [-I, -n, -P, -L, -d, -E, -s, -a, --max-args, --max-procs, --max-lines, --delimiter, --arg-file, --eof, --max-chars]
+    positionals: 0
+
+  - id: wrapper.watch
+    names: [watch]
+    flags_with_value: [-n, --interval, -d]
+    positionals: 0
+
+  - id: wrapper.npx
+    names: [npx, bunx, pnpx]
+    flags_with_value: [-p, --package, -c, --call]
+    positionals: 0
+
+  - id: wrapper.flock
+    names: [flock]
+    flags_with_value: [-w, --timeout, -E, --conflict-exit-code]
+    positionals: 1

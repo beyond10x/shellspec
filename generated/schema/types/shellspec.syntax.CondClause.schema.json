@@ -1,0 +1,1480 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.syntax.CondClause",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:804c158ff43d78f9d31a351d9a056e5b678ead537e3e4239dce552360818c5a1",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.syntax.AndOr": {
+      "title": "AndOr",
+      "description": "`a && b || c`; fish `a; and b`.",
+      "x-ess-name": "shellspec.syntax.AndOr",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "first": {
+          "$ref": "#/$defs/shellspec.syntax.Node"
+        },
+        "rest": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.AndOrItem"
+          }
+        }
+      },
+      "required": [
+        "span",
+        "first",
+        "rest"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.AndOrItem": {
+      "title": "AndOrItem",
+      "x-ess-name": "shellspec.syntax.AndOrItem",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "op": {
+          "$ref": "#/$defs/shellspec.syntax.AndOrOp"
+        },
+        "node": {
+          "$ref": "#/$defs/shellspec.syntax.Node"
+        }
+      },
+      "required": [
+        "op",
+        "node"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.AndOrOp": {
+      "title": "AndOrOp",
+      "x-ess-name": "shellspec.syntax.AndOrOp",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "and",
+        "or"
+      ]
+    },
+    "shellspec.syntax.Arith": {
+      "title": "Arith",
+      "description": "`(( … ))`.",
+      "x-ess-name": "shellspec.syntax.Arith",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "span",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Assignment": {
+      "title": "Assignment",
+      "description": "`X=1` before a command or alone; an array assignment has one value per element.",
+      "x-ess-name": "shellspec.syntax.Assignment",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "name": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Word"
+          }
+        },
+        "append": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "span",
+        "name",
+        "values",
+        "append"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Block": {
+      "title": "Block",
+      "description": "A statement list with redirects, the body of a `Subshell` `( … )` or a `Group` `{ …; }`, fish `begin; …; end`.",
+      "x-ess-name": "shellspec.syntax.Block",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "body": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Statement"
+          }
+        },
+        "redirects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Redirect"
+          }
+        }
+      },
+      "required": [
+        "span",
+        "body",
+        "redirects"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Case": {
+      "title": "Case",
+      "description": "`case w in …) …;; esac`; fish `switch`.",
+      "x-ess-name": "shellspec.syntax.Case",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "word": {
+          "$ref": "#/$defs/shellspec.word.Word"
+        },
+        "arms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.CaseArm"
+          }
+        },
+        "redirects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Redirect"
+          }
+        }
+      },
+      "required": [
+        "span",
+        "word",
+        "arms",
+        "redirects"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.CaseArm": {
+      "title": "CaseArm",
+      "x-ess-name": "shellspec.syntax.CaseArm",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "patterns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Word"
+          }
+        },
+        "body": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Statement"
+          }
+        }
+      },
+      "required": [
+        "patterns",
+        "body"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Command": {
+      "title": "Command",
+      "description": "A simple command.",
+      "x-ess-name": "shellspec.syntax.Command",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "assignments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Assignment"
+          }
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Word"
+          }
+        },
+        "redirects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Redirect"
+          }
+        }
+      },
+      "required": [
+        "span",
+        "assignments",
+        "words",
+        "redirects"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.CondClause": {
+      "title": "CondClause",
+      "x-ess-name": "shellspec.syntax.CondClause",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "condition": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Statement"
+          }
+        },
+        "body": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Statement"
+          }
+        }
+      },
+      "required": [
+        "condition",
+        "body"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Diagnostic": {
+      "title": "Diagnostic",
+      "description": "One refusal while lifting. The code names the parser's error kind; no input text is kept.",
+      "x-ess-name": "shellspec.syntax.Diagnostic",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "reason": {
+          "$ref": "#/$defs/shellspec.syntax.UnkReason"
+        },
+        "parser": {
+          "$ref": "#/$defs/shellspec.syntax.ParserId"
+        },
+        "code": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "span",
+        "reason",
+        "parser",
+        "code"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Dialect": {
+      "title": "Dialect",
+      "description": "The shell whose syntax the input is read in.",
+      "x-ess-name": "shellspec.syntax.Dialect",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "bash",
+        "sh",
+        "zsh",
+        "fish"
+      ]
+    },
+    "shellspec.syntax.For": {
+      "title": "For",
+      "description": "`for x in …; do …; done`; an arithmetic `for ((…))` keeps its header text in `arith`.",
+      "x-ess-name": "shellspec.syntax.For",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "variable": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Word"
+          }
+        },
+        "arith": {
+          "type": "string"
+        },
+        "body": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Statement"
+          }
+        },
+        "redirects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Redirect"
+          }
+        }
+      },
+      "required": [
+        "span",
+        "variable",
+        "body",
+        "redirects"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Function": {
+      "title": "Function",
+      "x-ess-name": "shellspec.syntax.Function",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "name": {
+          "type": "string"
+        },
+        "body": {
+          "$ref": "#/$defs/shellspec.syntax.Node"
+        }
+      },
+      "required": [
+        "span",
+        "name",
+        "body"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.If": {
+      "title": "If",
+      "description": "`if`, its `elif` clauses in order, and the `else` body (empty when there is none).",
+      "x-ess-name": "shellspec.syntax.If",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "clauses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.CondClause"
+          }
+        },
+        "otherwise": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Statement"
+          }
+        },
+        "redirects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Redirect"
+          }
+        }
+      },
+      "required": [
+        "span",
+        "clauses",
+        "otherwise",
+        "redirects"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Loop": {
+      "title": "Loop",
+      "description": "The body of a `While` or an `Until` node.",
+      "x-ess-name": "shellspec.syntax.Loop",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "condition": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Statement"
+          }
+        },
+        "body": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Statement"
+          }
+        },
+        "redirects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Redirect"
+          }
+        }
+      },
+      "required": [
+        "span",
+        "condition",
+        "body",
+        "redirects"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Node": {
+      "title": "Node",
+      "x-ess-name": "shellspec.syntax.Node",
+      "x-ess-kind": "union",
+      "oneOf": [
+        {
+          "title": "AndOr",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "AndOr"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.AndOr"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Arith",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Arith"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Arith"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Case",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Case"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Case"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Command",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Command"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Command"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "For",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "For"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.For"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Function",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Function"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Function"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Group",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Group"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Block"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "If",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "If"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.If"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Not",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Not"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Not"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Pipeline",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Pipeline"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Pipeline"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Subshell",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Subshell"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Block"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Test",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Test"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Test"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Unk",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Unk"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Unk"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Until",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Until"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Loop"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "While",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "While"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.syntax.Loop"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "x-ess-union-tag": "kind"
+    },
+    "shellspec.syntax.Not": {
+      "title": "Not",
+      "x-ess-name": "shellspec.syntax.Not",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "body": {
+          "$ref": "#/$defs/shellspec.syntax.Node"
+        }
+      },
+      "required": [
+        "span",
+        "body"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.ParserId": {
+      "title": "ParserId",
+      "description": "The parser and its version that produced a script or refused a region, `brush-parser/0.4.0`.",
+      "x-ess-name": "shellspec.syntax.ParserId",
+      "x-ess-kind": "newtype",
+      "type": "string"
+    },
+    "shellspec.syntax.PipeLink": {
+      "title": "PipeLink",
+      "description": "`|` passes stdout; `|&` and fish `&|` pass stderr too.",
+      "x-ess-name": "shellspec.syntax.PipeLink",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "stdout",
+        "stdout_stderr"
+      ]
+    },
+    "shellspec.syntax.Pipeline": {
+      "title": "Pipeline",
+      "x-ess-name": "shellspec.syntax.Pipeline",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "stages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Node"
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.PipeLink"
+          }
+        }
+      },
+      "required": [
+        "span",
+        "stages",
+        "links"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Script": {
+      "title": "Script",
+      "description": "The whole input, or the body of a substitution or a nested script.",
+      "x-ess-name": "shellspec.syntax.Script",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "dialect": {
+          "$ref": "#/$defs/shellspec.syntax.Dialect"
+        },
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "body": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Statement"
+          }
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.syntax.Diagnostic"
+          }
+        }
+      },
+      "required": [
+        "dialect",
+        "span",
+        "body",
+        "diagnostics"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Separator": {
+      "title": "Separator",
+      "description": "What ends a statement; `amp` runs it in the background, `end` is the end of the list.",
+      "x-ess-name": "shellspec.syntax.Separator",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "newline",
+        "semi",
+        "amp",
+        "end"
+      ]
+    },
+    "shellspec.syntax.Span": {
+      "title": "Span",
+      "description": "A byte range of the input, start inclusive, end exclusive.",
+      "x-ess-name": "shellspec.syntax.Span",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "integer"
+        },
+        "end": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Statement": {
+      "title": "Statement",
+      "x-ess-name": "shellspec.syntax.Statement",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "body": {
+          "$ref": "#/$defs/shellspec.syntax.Node"
+        },
+        "sep": {
+          "$ref": "#/$defs/shellspec.syntax.Separator"
+        }
+      },
+      "required": [
+        "span",
+        "body",
+        "sep"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Test": {
+      "title": "Test",
+      "description": "`[[ … ]]`, its operand words in order.",
+      "x-ess-name": "shellspec.syntax.Test",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Word"
+          }
+        },
+        "redirects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.Redirect"
+          }
+        }
+      },
+      "required": [
+        "span",
+        "words",
+        "redirects"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.Unk": {
+      "title": "Unk",
+      "description": "A region shellspec could not lift; its text is kept only as a digest and a length.",
+      "x-ess-name": "shellspec.syntax.Unk",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "text_digest": {
+          "description": "sha256 of the region's bytes, lower-case hex.",
+          "type": "string"
+        },
+        "len": {
+          "type": "integer"
+        },
+        "reason": {
+          "$ref": "#/$defs/shellspec.syntax.UnkReason"
+        },
+        "parser": {
+          "$ref": "#/$defs/shellspec.syntax.ParserId"
+        }
+      },
+      "required": [
+        "span",
+        "text_digest",
+        "len",
+        "reason",
+        "parser"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.UnkReason": {
+      "title": "UnkReason",
+      "description": "Why shellspec could not say (docs/design.md § 3.3): a region the parser refused, a construct of another dialect, a dynamic program word, a static program no rule names, a nested script deeper than 3.",
+      "x-ess-name": "shellspec.syntax.UnkReason",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "syntax",
+        "dialect",
+        "dynamic",
+        "no_rule",
+        "depth"
+      ]
+    },
+    "shellspec.word.CmdSub": {
+      "title": "CmdSub",
+      "x-ess-name": "shellspec.word.CmdSub",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/$defs/shellspec.syntax.Script"
+        },
+        "form": {
+          "$ref": "#/$defs/shellspec.word.SubForm"
+        }
+      },
+      "required": [
+        "body",
+        "form"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.word.DQuoted": {
+      "title": "DQuoted",
+      "x-ess-name": "shellspec.word.DQuoted",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "parts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.WordPart"
+          }
+        }
+      },
+      "required": [
+        "parts"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.word.FdTarget": {
+      "title": "FdTarget",
+      "x-ess-name": "shellspec.word.FdTarget",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "fd": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "fd"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.word.Heredoc": {
+      "title": "Heredoc",
+      "description": "A quoted delimiter makes the body literal; an unquoted one keeps substitutions as parts.",
+      "x-ess-name": "shellspec.word.Heredoc",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "delimiter": {
+          "type": "string"
+        },
+        "quoted": {
+          "type": "boolean"
+        },
+        "strip_tabs": {
+          "type": "boolean"
+        },
+        "body": {
+          "$ref": "#/$defs/shellspec.word.Word"
+        }
+      },
+      "required": [
+        "delimiter",
+        "quoted",
+        "strip_tabs",
+        "body"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.word.Param": {
+      "title": "Param",
+      "description": "`$x`, `${x:-y}`. `op` names the expansion operator when there is one.",
+      "x-ess-name": "shellspec.word.Param",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.word.ProcDir": {
+      "title": "ProcDir",
+      "description": "`<(…)` is in, `>(…)` out, zsh `=(…)` file.",
+      "x-ess-name": "shellspec.word.ProcDir",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "in",
+        "out",
+        "file"
+      ]
+    },
+    "shellspec.word.ProcSub": {
+      "title": "ProcSub",
+      "x-ess-name": "shellspec.word.ProcSub",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/$defs/shellspec.syntax.Script"
+        },
+        "dir": {
+          "$ref": "#/$defs/shellspec.word.ProcDir"
+        }
+      },
+      "required": [
+        "body",
+        "dir"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.word.Redirect": {
+      "title": "Redirect",
+      "x-ess-name": "shellspec.word.Redirect",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "fd": {
+          "type": "integer"
+        },
+        "op": {
+          "$ref": "#/$defs/shellspec.word.RedirectOp"
+        },
+        "target": {
+          "$ref": "#/$defs/shellspec.word.RedirectTarget"
+        }
+      },
+      "required": [
+        "span",
+        "op",
+        "target"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.word.RedirectOp": {
+      "title": "RedirectOp",
+      "x-ess-name": "shellspec.word.RedirectOp",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "in",
+        "out",
+        "append",
+        "clobber",
+        "out_noclobber",
+        "inout",
+        "dup_out",
+        "dup_in",
+        "both",
+        "herestring",
+        "heredoc"
+      ]
+    },
+    "shellspec.word.RedirectTarget": {
+      "title": "RedirectTarget",
+      "x-ess-name": "shellspec.word.RedirectTarget",
+      "x-ess-kind": "union",
+      "oneOf": [
+        {
+          "title": "Fd",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Fd"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.FdTarget"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "File",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "File"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.Word"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Heredoc",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Heredoc"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.Heredoc"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "ProcSub",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "ProcSub"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.ProcSub"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "x-ess-union-tag": "kind"
+    },
+    "shellspec.word.SubForm": {
+      "title": "SubForm",
+      "x-ess-name": "shellspec.word.SubForm",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "dollar",
+        "backtick",
+        "fish_paren"
+      ]
+    },
+    "shellspec.word.Text": {
+      "title": "Text",
+      "x-ess-name": "shellspec.word.Text",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.word.Word": {
+      "title": "Word",
+      "x-ess-name": "shellspec.word.Word",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/shellspec.syntax.Span"
+        },
+        "raw": {
+          "description": "The word as written.",
+          "type": "string"
+        },
+        "parts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.word.WordPart"
+          }
+        },
+        "static_value": {
+          "description": "The value of a static word; absent for a dynamic one.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "span",
+        "raw",
+        "parts"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.word.WordPart": {
+      "title": "WordPart",
+      "x-ess-name": "shellspec.word.WordPart",
+      "x-ess-kind": "union",
+      "oneOf": [
+        {
+          "title": "AnsiC",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "AnsiC"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.Text"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "ArithSub",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "ArithSub"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.Text"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Brace",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Brace"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.Text"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "CmdSub",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "CmdSub"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.CmdSub"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "DQuoted",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "DQuoted"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.DQuoted"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Glob",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Glob"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.Text"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Lit",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Lit"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.Text"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Param",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Param"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.Param"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "ProcSub",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "ProcSub"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.ProcSub"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "SQuoted",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "SQuoted"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.Text"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "title": "Tilde",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "Tilde"
+            },
+            "value": {
+              "$ref": "#/$defs/shellspec.word.Text"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "x-ess-union-tag": "kind"
+    }
+  }
+}

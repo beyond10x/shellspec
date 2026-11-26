@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.word.SubForm",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:e6bee11de4520656d696ac10ba75fa71078318e817c6b5c9f6bd95c4a0c4c199",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.word.SubForm": {
+      "title": "SubForm",
+      "x-ess-name": "shellspec.word.SubForm",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "dollar",
+        "backtick",
+        "fish_paren"
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.syntax.ParserId",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:fa728a03ca2c811e6540ac5249cd5a92057bd2a46810e26aee34cd5152def27a",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.syntax.ParserId": {
+      "title": "ParserId",
+      "description": "The parser and its version that produced a script or refused a region, `brush-parser/0.4.0`.",
+      "x-ess-name": "shellspec.syntax.ParserId",
+      "x-ess-kind": "newtype",
+      "type": "string"
+    }
+  }
+}

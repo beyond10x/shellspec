@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.invocation.Invocation",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:c732dbde876d5495615bb80d8431345b65b2d6b8c4bd093d7d7e04dab06c8aba",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.Category": {
+      "title": "Category",
+      "x-ess-name": "shellspec.classification.Category",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "navigate",
+        "read",
+        "list",
+        "search",
+        "filter",
+        "output",
+        "edit",
+        "build",
+        "test",
+        "lint",
+        "run",
+        "vcs",
+        "forge",
+        "network",
+        "package",
+        "process",
+        "environment",
+        "system",
+        "container",
+        "tool",
+        "unk"
+      ]
+    },
+    "shellspec.classification.Effect": {
+      "title": "Effect",
+      "x-ess-name": "shellspec.classification.Effect",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "fs_read",
+        "fs_write",
+        "fs_delete",
+        "net_out",
+        "remote_write",
+        "process_signal",
+        "exec",
+        "stdin",
+        "wait"
+      ]
+    },
+    "shellspec.invocation.Guard": {
+      "title": "Guard",
+      "description": "Runs only if the invocation at index `after` succeeded (and) or failed (or).",
+      "x-ess-name": "shellspec.invocation.Guard",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "op": {
+          "$ref": "#/$defs/shellspec.syntax.AndOrOp"
+        },
+        "after": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "op",
+        "after"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.invocation.Invocation": {
+      "title": "Invocation",
+      "description": "One simple command. `argv` and `redirects` hold `shellspec.word.Word` and `shellspec.word.Redirect` values; they are `Json` here because the ess-cli/2 binding projects no union.",
+      "x-ess-name": "shellspec.invocation.Invocation",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "integer"
+        },
+        "path": {
+          "description": "Position in the tree, statement and child indices from the script's root.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "program": {
+          "description": "Basename of the first static word after wrappers and assignments; absent when that word is dynamic.",
+          "type": "string"
+        },
+        "subcommand": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wrappers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assignments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "flags": {
+          "description": "Names of the static flag words after the program, without values.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "argv": {
+          "type": "array",
+          "items": {}
+        },
+        "redirects": {
+          "type": "array",
+          "items": {}
+        },
+        "stage": {
+          "$ref": "#/$defs/shellspec.invocation.Stage"
+        },
+        "guard": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.invocation.Guard"
+          }
+        },
+        "context": {
+          "$ref": "#/$defs/shellspec.invocation.InvocationContext"
+        },
+        "cwd": {
+          "description": "Working directory relative to the call's; absent once a `cd` was dynamic.",
+          "type": "string"
+        },
+        "remote": {
+          "type": "boolean"
+        },
+        "depth": {
+          "type": "integer"
+        },
+        "category": {
+          "$ref": "#/$defs/shellspec.classification.Category"
+        },
+        "operation": {
+          "type": "string"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.classification.Effect"
+          }
+        },
+        "rule": {
+          "type": "string"
+        },
+        "unk": {
+          "$ref": "#/$defs/shellspec.syntax.UnkReason"
+        }
+      },
+      "required": [
+        "index",
+        "path",
+        "subcommand",
+        "wrappers",
+        "assignments",
+        "flags",
+        "argv",
+        "redirects",
+        "stage",
+        "guard",
+        "context",
+        "remote",
+        "depth",
+        "category",
+        "effects"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.invocation.InvocationContext": {
+      "title": "InvocationContext",
+      "x-ess-name": "shellspec.invocation.InvocationContext",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "top",
+        "cmdsub",
+        "procsub",
+        "subshell",
+        "heredoc",
+        "nested",
+        "loop_body",
+        "function_body"
+      ]
+    },
+    "shellspec.invocation.Stage": {
+      "title": "Stage",
+      "description": "The pipeline an invocation is a stage of; a command outside a pipe is the one stage of its own.",
+      "x-ess-name": "shellspec.invocation.Stage",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "pipeline": {
+          "type": "integer"
+        },
+        "index": {
+          "type": "integer"
+        },
+        "of": {
+          "type": "integer"
+        },
+        "role": {
+          "$ref": "#/$defs/shellspec.invocation.StageRole"
+        }
+      },
+      "required": [
+        "pipeline",
+        "index",
+        "of",
+        "role"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.invocation.StageRole": {
+      "title": "StageRole",
+      "x-ess-name": "shellspec.invocation.StageRole",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "alone",
+        "head",
+        "middle",
+        "tail"
+      ]
+    },
+    "shellspec.syntax.AndOrOp": {
+      "title": "AndOrOp",
+      "x-ess-name": "shellspec.syntax.AndOrOp",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "and",
+        "or"
+      ]
+    },
+    "shellspec.syntax.UnkReason": {
+      "title": "UnkReason",
+      "description": "Why shellspec could not say (docs/design.md § 3.3): a region the parser refused, a construct of another dialect, a dynamic program word, a static program no rule names, a nested script deeper than 3.",
+      "x-ess-name": "shellspec.syntax.UnkReason",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "syntax",
+        "dialect",
+        "dynamic",
+        "no_rule",
+        "depth"
+      ]
+    }
+  }
+}

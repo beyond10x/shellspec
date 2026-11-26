@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.cli.RulesCheckInput",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:d93d14afb574e9621779a24c51f225c202a1e3cfc058df5c8342934c5dc93c19",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.cli.RulesCheckInput": {
+      "title": "RulesCheckInput",
+      "x-ess-name": "shellspec.cli.RulesCheckInput",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "ruleset": {
+          "description": "A rules file or a directory of `*.yaml` rules files; the built-in ruleset by default.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

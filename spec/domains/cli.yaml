@@ -1,0 +1,111 @@
+domain: shellspec.cli
+
+summary: >-
+  The typed inputs, results and refusals of the `shellspec` command line, presented by the
+  ess-cli/2 binding in `spec/cli.yaml`. The `shell-ir/1` tree is recursive and has unions, which
+  the binding does not project, so `lift` returns it as `Json`.
+
+types:
+  - name: shellspec.cli.Refusal
+    kind: struct
+    fields:
+      - {name: detail, type: String}
+
+  - name: shellspec.cli.LiftInput
+    kind: struct
+    fields:
+      - {name: dialect, type: shellspec.syntax.Dialect}
+      - {name: command, type: String}
+
+  - name: shellspec.cli.LiftResult
+    kind: struct
+    fields:
+      - name: format
+        type: String
+        summary: "`shell-ir/1`."
+      - {name: parser, type: shellspec.syntax.ParserId}
+      - name: script
+        type: Json
+        summary: A `shellspec.syntax.Script`.
+
+  - name: shellspec.cli.InvocationsInput
+    kind: struct
+    fields:
+      - {name: dialect, type: shellspec.syntax.Dialect}
+      - {name: command, type: String}
+      - name: ruleset
+        type: Optional<String>
+        summary: A rules file or a directory of `*.yaml` rules files; the built-in ruleset by default.
+
+  - name: shellspec.cli.InvocationsResult
+    kind: struct
+    fields:
+      - {name: ruleset, type: shellspec.classification.RulesetDigest}
+      - {name: invocations, type: List<shellspec.invocation.Invocation>}
+      - name: dominant
+        type: Optional<Integer>
+        summary: Index of the first invocation that is not navigate, filter, output or environment (§ 7.1).
+
+  - name: shellspec.cli.ShapeInput
+    kind: struct
+    fields:
+      - {name: dialect, type: shellspec.syntax.Dialect}
+      - {name: command, type: String}
+
+  - name: shellspec.cli.ShapeResult
+    kind: struct
+    fields:
+      - name: shape
+        type: String
+        summary: The redacted form of the script (§ 7.1); it holds no value of the input.
+
+  - name: shellspec.cli.RulesCheckInput
+    kind: struct
+    fields:
+      - name: ruleset
+        type: Optional<String>
+        summary: A rules file or a directory of `*.yaml` rules files; the built-in ruleset by default.
+
+  - name: shellspec.cli.RulesCheckResult
+    kind: struct
+    fields:
+      - {name: ruleset, type: shellspec.classification.RulesetDigest}
+      - {name: files, type: List<String>}
+      - {name: wrappers, type: Integer}
+      - {name: programs, type: Integer}
+      - {name: rules, type: Integer}
+
+  - name: shellspec.cli.CorpusStatsInput
+    kind: struct
+    fields:
+      - name: input
+        type: String
+        summary: A JSON-lines file; each line a JSON string or an object with a `command` string.
+      - {name: dialect, type: shellspec.syntax.Dialect}
+      - name: ruleset
+        type: Optional<String>
+
+  - name: shellspec.cli.Count
+    kind: struct
+    fields:
+      - {name: key, type: String}
+      - {name: count, type: Integer}
+
+  - name: shellspec.cli.CorpusStats
+    kind: struct
+    naming:
+      summary: Counts over a file of commands. No command text; `unk_programs` names the programs no rule matched.
+    fields:
+      - {name: ruleset, type: shellspec.classification.RulesetDigest}
+      - {name: commands, type: Integer}
+      - name: refused
+        type: Integer
+        summary: Commands with at least one region the parser refused.
+      - {name: unk_regions, type: Integer}
+      - {name: invocations, type: Integer}
+      - {name: unk_invocations, type: Integer}
+      - {name: unk_permille, type: Integer}
+      - {name: categories, type: List<shellspec.cli.Count>}
+      - {name: unk_reasons, type: List<shellspec.cli.Count>}
+      - {name: unk_programs, type: List<shellspec.cli.Count>}
+      - {name: dominant, type: List<shellspec.cli.Count>}

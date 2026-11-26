@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.classification.StreamRule",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:8dd6f4bfd385bb7a3d8a38f0ef7cdfa92a30f7662dbba7d69171eae8168d0f93",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.Category": {
+      "title": "Category",
+      "x-ess-name": "shellspec.classification.Category",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "navigate",
+        "read",
+        "list",
+        "search",
+        "filter",
+        "output",
+        "edit",
+        "build",
+        "test",
+        "lint",
+        "run",
+        "vcs",
+        "forge",
+        "network",
+        "package",
+        "process",
+        "environment",
+        "system",
+        "container",
+        "tool",
+        "unk"
+      ]
+    },
+    "shellspec.classification.StreamRule": {
+      "title": "StreamRule",
+      "description": "A program that is a filter when it has no file operand (§ 6.2 step 5). The first `operands_before_files` positionals are no file (a pattern, a script), unless one of `pattern_flags` gave the pattern (`grep -e x f`).",
+      "x-ess-name": "shellspec.classification.StreamRule",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "file_category": {
+          "$ref": "#/$defs/shellspec.classification.Category"
+        },
+        "operands_before_files": {
+          "type": "integer"
+        },
+        "pattern_flags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "file_category",
+        "operands_before_files"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

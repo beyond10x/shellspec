@@ -1,0 +1,9 @@
+format: ess-inputs/1
+specification:
+  - system.yaml
+  - domains/syntax.yaml
+  - domains/word.yaml
+  - domains/invocation.yaml
+  - domains/classification.yaml
+  - domains/cli.yaml
+scenarios: []

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.cli.LiftResult",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:6f14d0f9bee30b1feffebde5dc6585dd5458b7fb61f3e610f8d88c90e97b353d",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.cli.LiftResult": {
+      "title": "LiftResult",
+      "x-ess-name": "shellspec.cli.LiftResult",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "format": {
+          "description": "`shell-ir/1`.",
+          "type": "string"
+        },
+        "parser": {
+          "$ref": "#/$defs/shellspec.syntax.ParserId"
+        },
+        "script": {
+          "description": "A `shellspec.syntax.Script`."
+        }
+      },
+      "required": [
+        "format",
+        "parser",
+        "script"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.syntax.ParserId": {
+      "title": "ParserId",
+      "description": "The parser and its version that produced a script or refused a region, `brush-parser/0.4.0`.",
+      "x-ess-name": "shellspec.syntax.ParserId",
+      "x-ess-kind": "newtype",
+      "type": "string"
+    }
+  }
+}

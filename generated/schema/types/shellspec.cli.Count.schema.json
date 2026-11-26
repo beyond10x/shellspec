@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.cli.Count",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:99c82404538866909be779e0087f0c18452e6ffd4663f9a4c6a1bd5461523703",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.cli.Count": {
+      "title": "Count",
+      "x-ess-name": "shellspec.cli.Count",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "key",
+        "count"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

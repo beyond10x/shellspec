@@ -1,0 +1,74 @@
+{
+  "format": "b10x-product-landing/1",
+  "product": {
+    "name": "shellspec",
+    "mark": "S",
+    "eyebrow": "Shell command IR · no release yet",
+    "promise": [
+      "One shell command string in,",
+      "one IR and a category per command out."
+    ],
+    "lede": "An agent's Bash tool sends a whole script in one string: cd x && cargo test 2>&1 | tail. shellspec lifts that string from bash, POSIX sh, zsh or fish into one IR of lists, pipelines, simple commands, redirects, heredocs and substitutions, and gives every simple command a category from a declared ruleset. Lifting is pure: nothing is executed, expanded or globbed.",
+    "description": "A Rust library and CLI that lifts shell command strings from bash, sh, zsh and fish into one IR and classifies every simple command with a declared ruleset.",
+    "actions": [
+      {
+        "label": "Design",
+        "href": "/docs/",
+        "kind": "primary"
+      },
+      {
+        "label": "Corpus research",
+        "href": "/docs/research/corpus"
+      }
+    ],
+    "meta": "No release yet · Apache-2.0"
+  },
+  "sections": [
+    {
+      "kind": "flow",
+      "eyebrow": "The pipeline",
+      "title": "From a string to a categorised list.",
+      "lede": "Each step is a function of the library and a command of the shellspec binary.",
+      "steps": [
+        {
+          "label": "lift",
+          "title": "Parse in a dialect",
+          "description": "lift(text, dialect) returns a Script; input that does not parse becomes Unk nodes with diagnostics, never an error."
+        },
+        {
+          "label": "invocations",
+          "title": "Flatten and classify",
+          "description": "invocations(script, ruleset) lists every simple command with its wrappers, pipe stage, cwd and category."
+        },
+        {
+          "label": "shape",
+          "title": "Redact",
+          "description": "shape(script) keeps node kinds, programs, subcommands and flag names, and drops the words."
+        }
+      ]
+    },
+    {
+      "kind": "features",
+      "eyebrow": "Built",
+      "title": "What the repository holds.",
+      "lede": "Specification first: every noun is declared in an ESS specification before code uses it.",
+      "items": [
+        {
+          "title": "IR",
+          "description": "shell-ir/1, declared in spec/ and projected to JSON Schema in generated/.",
+          "href": "/docs/"
+        },
+        {
+          "title": "Ruleset",
+          "description": "YAML rules with a digest; rules check refuses ties and wrappers without arity.",
+          "href": "/docs/"
+        },
+        {
+          "title": "Corpus",
+          "description": "The counts the design rests on: operators, pipes, first words, parser refusals.",
+          "href": "/docs/research/corpus"
+        }
+      ]
+    }
+  ]
+}

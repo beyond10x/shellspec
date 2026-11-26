@@ -1,0 +1,57 @@
+format: shellspec-rules/1
+
+programs:
+  - names: [aep, ess, worktree, inbox, b10x, b10x-gates, metaharness, loom, canon, substrate, sessionspec, shellspec, codespec, ratchet, conductor, connectors, surf, swell, runbook, spindle, takt, mandate, intake, cortex, eventlog, agentide, mantle, codegate, slot, gates, harness, governor, sandbox, thalamus]
+    subcommands: 2
+  - names: [claude, codex, hermes, opencode, gemini, aider]
+    flags_with_value: [-p, --print, --model, --output-format, --input-format, --permission-mode, --allowedTools, --disallowedTools, --resume, -r, --session-id, --append-system-prompt, --system-prompt, --add-dir, --max-turns, --mcp-config, --settings, -m, -c, --config]
+    subcommands: 1
+
+rules:
+  - id: workspace.tool
+    program: [aep, ess, worktree, inbox, b10x, b10x-gates, metaharness, loom, canon, substrate, sessionspec, shellspec, codespec, ratchet, conductor, connectors, surf, swell, runbook, spindle, takt, mandate, intake, cortex, eventlog, agentide, mantle, codegate, slot, gates, harness, governor, sandbox, thalamus]
+    category: tool
+    operation: tool
+  - id: harness.cli
+    program: [claude, codex, hermes, opencode, gemini, aider]
+    category: tool
+    operation: tool.agent
+    effects: [net_out]
+  - id: aep.plan
+    program: [aep]
+    sub: [plan]
+    category: tool
+    operation: tool.aep.plan
+  - id: ess.specify
+    program: [ess]
+    sub: [specify]
+    category: tool
+    operation: tool.ess.specify
+  - id: ess.generate
+    program: [ess]
+    sub: [generate]
+    category: build
+    operation: build.ess.generate
+    effects: [fs_write]
+  - id: ess.verify
+    program: [ess]
+    sub: [verify]
+    category: test
+    operation: test.ess.verify
+  - id: worktree.create
+    program: [worktree]
+    sub: [create]
+    category: vcs
+    operation: vcs.worktree.create
+    effects: [fs_write]
+  - id: slot.status
+    program: [slot]
+    sub: [status]
+    category: tool
+    operation: tool.slot.status
+  - id: slot.cancel
+    program: [slot]
+    sub: [cancel]
+    category: process
+    operation: tool.slot.cancel
+    effects: [process_signal]

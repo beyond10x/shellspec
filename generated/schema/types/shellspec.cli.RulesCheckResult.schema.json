@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.cli.RulesCheckResult",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:d943aaddd675975cb72faa279437472ab36630269ea5030cd22cf1c8434fff1b",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.RulesetDigest": {
+      "title": "RulesetDigest",
+      "description": "`sha256:` and the hex digest over every rules file, by name, in name order.",
+      "x-ess-name": "shellspec.classification.RulesetDigest",
+      "x-ess-kind": "newtype",
+      "type": "string"
+    },
+    "shellspec.cli.RulesCheckResult": {
+      "title": "RulesCheckResult",
+      "x-ess-name": "shellspec.cli.RulesCheckResult",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "ruleset": {
+          "$ref": "#/$defs/shellspec.classification.RulesetDigest"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wrappers": {
+          "type": "integer"
+        },
+        "programs": {
+          "type": "integer"
+        },
+        "rules": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "ruleset",
+        "files",
+        "wrappers",
+        "programs",
+        "rules"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

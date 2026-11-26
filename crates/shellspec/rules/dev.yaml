@@ -1,0 +1,282 @@
+format: shellspec-rules/1
+
+programs:
+  - names: [git]
+    flags_with_value: [-C, -c, --git-dir, --work-tree, --namespace, --config-env, --exec-path]
+    subcommands: 1
+  - names: [gh]
+    flags_with_value: [-R, --repo, --hostname]
+    subcommands: 2
+  - names: [glab]
+    flags_with_value: [-R, --repo]
+    subcommands: 2
+  - names: [cargo]
+    flags_with_value: [--manifest-path, -p, --package, --target, --target-dir, --features, -F, --config, --color, -Z, --bin, --test, --example, --bench, --profile, --exclude, -j, --jobs, --message-format, -E, --filter-expr, --partition, --test-threads, --lib-dir]
+    skip_prefix: [+]
+    subcommands: 1
+  - names: [go]
+    flags_with_value: [-C, -run, -bench, -count, -timeout, -tags, -o, -p, -coverprofile, -covermode, -ldflags, -gcflags, -mod]
+    subcommands: 1
+  - names: [npm, pnpm, yarn, bun]
+    flags_with_value: [--prefix, -C, --dir, --workspace, -w, --filter, --cwd]
+    subcommands: 1
+  - names: [make, gmake]
+    flags_with_value: [-C, --directory, -f, --file, -j, --jobs, -l, --load-average, -o, -W]
+  - names: [task, just]
+    flags_with_value: [-d, --dir, -t, --taskfile, -f, --justfile, -o, --output, --concurrency, -C]
+  - names: [docker, podman, nerdctl]
+    flags_with_value: [-H, --host, --context, -c, --config, --log-level]
+    subcommands: 2
+  - names: [docker-compose]
+    flags_with_value: [-f, --file, -p, --project-name, --profile, --env-file]
+    subcommands: 1
+  - names: [kubectl, oc]
+    flags_with_value: [-n, --namespace, --context, --kubeconfig, -l, --selector, -o, --output, -c, --container, --cluster, --user, -f, --filename, --field-selector, --tail, --since, --timeout]
+    subcommands: 1
+  - names: [helm]
+    flags_with_value: [-n, --namespace, --kube-context, --kubeconfig, -f, --values, --set, --version]
+    subcommands: 1
+  - names: [pip, pip3, uv, pipx, poetry]
+    flags_with_value: [-r, --requirement, -c, --constraint, --index-url, --python, -p, --directory, --project]
+    subcommands: 1
+  - names: [pacman, yay, paru, apt, apt-get, brew, dnf, snap, flatpak]
+    subcommands: 1
+  - names: [rustup]
+    flags_with_value: [--toolchain]
+    subcommands: 1
+  - names: [vitest, jest, playwright, pytest]
+    flags_with_value: [-c, --config, --project, -t, --testNamePattern, --reporter, --workers, -j, --maxWorkers, --grep, -g, -k, -m, --shard, --timeout, --retries]
+    subcommands: 1
+  - names: [rustc]
+    flags_with_value: [-o, --edition, --crate-type, --crate-name, -C, --codegen, -L, --extern, --cfg, --target, --emit, --out-dir]
+  - names: [shellcheck]
+    flags_with_value: [-s, --shell, -e, --exclude, -S, --severity, -f, --format]
+
+rules:
+  - {id: git, program: [git], category: vcs, operation: vcs}
+  - {id: git.status, program: [git], sub: [status], category: vcs, operation: vcs.status}
+  - {id: git.log, program: [git], sub: [log], category: vcs, operation: vcs.log}
+  - {id: git.show, program: [git], sub: [show], category: vcs, operation: vcs.show}
+  - {id: git.diff, program: [git], sub: [diff], category: vcs, operation: vcs.diff}
+  - {id: git.blame, program: [git], sub: [blame], category: vcs, operation: vcs.blame}
+  - {id: git.add, program: [git], sub: [add], category: vcs, operation: vcs.add}
+  - {id: git.commit, program: [git], sub: [commit], category: vcs, operation: vcs.commit}
+  - {id: git.merge, program: [git], sub: [merge], category: vcs, operation: vcs.merge}
+  - {id: git.rebase, program: [git], sub: [rebase], category: vcs, operation: vcs.rebase}
+  - {id: git.reset, program: [git], sub: [reset], category: vcs, operation: vcs.reset}
+  - {id: git.checkout, program: [git], sub: [checkout], category: vcs, operation: vcs.checkout}
+  - {id: git.switch, program: [git], sub: [switch], category: vcs, operation: vcs.switch}
+  - {id: git.restore, program: [git], sub: [restore], category: vcs, operation: vcs.restore}
+  - {id: git.stash, program: [git], sub: [stash], category: vcs, operation: vcs.stash}
+  - {id: git.branch, program: [git], sub: [branch], category: vcs, operation: vcs.branch}
+  - id: git.branch.delete
+    program: [git]
+    sub: [branch]
+    flags_any: [-D, -d, --delete]
+    category: vcs
+    operation: vcs.branch.delete
+  - {id: git.tag, program: [git], sub: [tag], category: vcs, operation: vcs.tag}
+  - {id: git.worktree, program: [git], sub: [worktree], category: vcs, operation: vcs.worktree}
+  - {id: git.rev-parse, program: [git], sub: [rev-parse], category: vcs, operation: vcs.rev_parse}
+  - {id: git.ls-files, program: [git], sub: [ls-files], category: list, operation: vcs.ls_files, effects: [fs_read]}
+  - {id: git.grep, program: [git], sub: [grep], category: search, operation: vcs.grep, effects: [fs_read]}
+  - {id: git.clean, program: [git], sub: [clean], category: vcs, operation: vcs.clean, effects: [fs_delete]}
+  - {id: git.rm, program: [git], sub: [rm], category: vcs, operation: vcs.rm, effects: [fs_delete]}
+  - {id: git.mv, program: [git], sub: [mv], category: vcs, operation: vcs.mv, effects: [fs_write]}
+  - {id: git.cherry-pick, program: [git], sub: [cherry-pick], category: vcs, operation: vcs.cherry_pick}
+  - {id: git.revert, program: [git], sub: [revert], category: vcs, operation: vcs.revert}
+  - {id: git.fetch, program: [git], sub: [fetch], category: vcs, operation: vcs.fetch, effects: [net_out]}
+  - {id: git.pull, program: [git], sub: [pull], category: vcs, operation: vcs.pull, effects: [net_out]}
+  - {id: git.clone, program: [git], sub: [clone], category: vcs, operation: vcs.clone, effects: [net_out, fs_write]}
+  - {id: git.ls-remote, program: [git], sub: [ls-remote], category: vcs, operation: vcs.ls_remote, effects: [net_out]}
+  - {id: git.push, program: [git], sub: [push], category: vcs, operation: vcs.push, effects: [net_out, remote_write]}
+  - id: git.push.force
+    program: [git]
+    sub: [push]
+    flags_any: [--force, -f, --force-with-lease, --force-if-includes, --delete, -d, --mirror]
+    category: vcs
+    operation: vcs.push.force
+    effects: [net_out, remote_write]
+  - {id: jj, program: [jj, hg, svn], category: vcs, operation: vcs}
+
+  - {id: gh, program: [gh, glab], category: forge, operation: forge, effects: [net_out]}
+  - {id: gh.pr.create, program: [gh], sub: [pr, create], category: forge, operation: forge.pr.create, effects: [net_out, remote_write]}
+  - {id: gh.pr.merge, program: [gh], sub: [pr, merge], category: forge, operation: forge.pr.merge, effects: [net_out, remote_write]}
+  - {id: gh.pr.comment, program: [gh], sub: [pr, comment], category: forge, operation: forge.pr.comment, effects: [net_out, remote_write]}
+  - {id: gh.pr.edit, program: [gh], sub: [pr, edit], category: forge, operation: forge.pr.edit, effects: [net_out, remote_write]}
+  - {id: gh.pr.close, program: [gh], sub: [pr, close], category: forge, operation: forge.pr.close, effects: [net_out, remote_write]}
+  - {id: gh.pr.review, program: [gh], sub: [pr, review], category: forge, operation: forge.pr.review, effects: [net_out, remote_write]}
+  - {id: gh.issue.create, program: [gh], sub: [issue, create], category: forge, operation: forge.issue.create, effects: [net_out, remote_write]}
+  - {id: gh.issue.comment, program: [gh], sub: [issue, comment], category: forge, operation: forge.issue.comment, effects: [net_out, remote_write]}
+  - {id: gh.release.create, program: [gh], sub: [release, create], category: forge, operation: forge.release.create, effects: [net_out, remote_write]}
+  - {id: gh.run.rerun, program: [gh], sub: [run, rerun], category: forge, operation: forge.run.rerun, effects: [net_out, remote_write]}
+  - {id: gh.api, program: [gh], sub: [api], category: forge, operation: forge.api, effects: [net_out]}
+  - id: gh.api.write
+    program: [gh]
+    sub: [api]
+    flags_any: [-X, --method, -f, -F, --field, --raw-field, --input]
+    category: forge
+    operation: forge.api.write
+    effects: [net_out, remote_write]
+  - {id: glab.mr.create, program: [glab], sub: [mr, create], category: forge, operation: forge.mr.create, effects: [net_out, remote_write]}
+  - {id: glab.mr.merge, program: [glab], sub: [mr, merge], category: forge, operation: forge.mr.merge, effects: [net_out, remote_write]}
+  - {id: glab.mr.note, program: [glab], sub: [mr, note], category: forge, operation: forge.mr.note, effects: [net_out, remote_write]}
+
+  - {id: cargo, program: [cargo], category: build, operation: build.cargo}
+  - {id: cargo.build, program: [cargo], sub: [build], category: build, operation: build.cargo}
+  - {id: cargo.b, program: [cargo], sub: [b], category: build, operation: build.cargo}
+  - {id: cargo.check, program: [cargo], sub: [check], category: build, operation: build.cargo.check}
+  - {id: cargo.c, program: [cargo], sub: [c], category: build, operation: build.cargo.check}
+  - {id: cargo.doc, program: [cargo], sub: [doc], category: build, operation: build.cargo.doc}
+  - {id: cargo.test, program: [cargo], sub: [test], category: test, operation: test.cargo}
+  - {id: cargo.t, program: [cargo], sub: [t], category: test, operation: test.cargo}
+  - {id: cargo.nextest, program: [cargo], sub: [nextest], category: test, operation: test.cargo.nextest}
+  - {id: cargo.bench, program: [cargo], sub: [bench], category: test, operation: test.cargo.bench}
+  - {id: cargo.llvm-cov, program: [cargo], sub: [llvm-cov], category: test, operation: test.cargo.coverage}
+  - {id: cargo.mutants, program: [cargo], sub: [mutants], category: test, operation: test.cargo.mutants}
+  - {id: cargo.miri, program: [cargo], sub: [miri], category: test, operation: test.cargo.miri}
+  - {id: cargo.fuzz, program: [cargo], sub: [fuzz], category: test, operation: test.cargo.fuzz}
+  - {id: cargo.clippy, program: [cargo], sub: [clippy], category: lint, operation: lint.cargo.clippy}
+  - {id: cargo.fmt, program: [cargo], sub: [fmt], category: lint, operation: lint.cargo.fmt}
+  - {id: cargo.deny, program: [cargo], sub: [deny], category: lint, operation: lint.cargo.deny}
+  - {id: cargo.audit, program: [cargo], sub: [audit], category: lint, operation: lint.cargo.audit}
+  - {id: cargo.machete, program: [cargo], sub: [machete], category: lint, operation: lint.cargo.machete}
+  - {id: cargo.udeps, program: [cargo], sub: [udeps], category: lint, operation: lint.cargo.udeps}
+  - {id: cargo.semver-checks, program: [cargo], sub: [semver-checks], category: lint, operation: lint.cargo.semver}
+  - {id: cargo.run, program: [cargo], sub: [run], category: run, operation: run.cargo, effects: [exec]}
+  - {id: cargo.r, program: [cargo], sub: [r], category: run, operation: run.cargo, effects: [exec]}
+  - {id: cargo.xtask, program: [cargo], sub: [xtask], category: run, operation: run.cargo.xtask, effects: [exec]}
+  - {id: cargo.add, program: [cargo], sub: [add], category: package, operation: package.cargo.add}
+  - {id: cargo.remove, program: [cargo], sub: [remove], category: package, operation: package.cargo.remove}
+  - {id: cargo.install, program: [cargo], sub: [install], category: package, operation: package.cargo.install, effects: [net_out]}
+  - {id: cargo.update, program: [cargo], sub: [update], category: package, operation: package.cargo.update, effects: [net_out]}
+  - {id: cargo.fetch, program: [cargo], sub: [fetch], category: package, operation: package.cargo.fetch, effects: [net_out]}
+  - {id: cargo.clean, program: [cargo], sub: [clean], category: edit, operation: edit.cargo.clean, effects: [fs_delete]}
+  - {id: cargo.tree, program: [cargo], sub: [tree], category: tool, operation: tool.cargo.tree}
+  - {id: cargo.metadata, program: [cargo], sub: [metadata], category: tool, operation: tool.cargo.metadata}
+  - {id: cargo.search, program: [cargo], sub: [search], category: tool, operation: tool.cargo.search, effects: [net_out]}
+  - {id: cargo.info, program: [cargo], sub: [info], category: tool, operation: tool.cargo.info, effects: [net_out]}
+  - {id: cargo.version, program: [cargo], sub: [version], category: tool, operation: tool.cargo.version}
+  - {id: cargo.locate-project, program: [cargo], sub: [locate-project], category: tool, operation: tool.cargo.locate}
+  - {id: cargo.pkgid, program: [cargo], sub: [pkgid], category: tool, operation: tool.cargo.pkgid}
+  - {id: rustc, program: [rustc, cc, gcc, g++, clang, clang++, cmake, ninja, meson, ld, ld.lld, mold, lld, ar, sccache, flutter, cargo-about, tsc, esbuild, webpack, rollup, protoc, wasm-pack, trunk, zig, javac, mvn, gradle, dotnet, msbuild, buf], category: build, operation: build}
+  - {id: rustup, program: [rustup], category: package, operation: package.rustup}
+  - {id: rustfmt, program: [rustfmt, gofmt, goimports, prettier, eslint, biome, oxlint, ruff, black, isort, flake8, pylint, mypy, pyright, shellcheck, shfmt, yamllint, actionlint, hadolint, markdownlint, markdownlint-cli2, taplo, vue-tsc, stylua, golangci-lint, staticcheck, typos, codespell, clippy-driver, dprint, tflint, kubeconform, kubeval, vale, lychee, editorconfig-checker, commitlint, tsc-check, stylelint], category: lint, operation: lint}
+  - {id: test-runner, program: [vitest, jest, mocha, pytest, ctest, bats, cargo-nextest, gotestsum, tap, ava, karma, cypress, nextest], category: test, operation: test}
+  - {id: playwright, program: [playwright], category: run, operation: run.playwright, effects: [exec]}
+  - {id: playwright.test, program: [playwright], sub: [test], category: test, operation: test.playwright}
+  - {id: playwright.install, program: [playwright], sub: [install], category: package, operation: package.playwright, effects: [net_out]}
+  - {id: vite, program: [vite, next, nuxt, astro, docusaurus, remix, svelte-kit, tsx, ts-node, nodemon, storybook, wrangler, mkdocs, hugo, zola, mdbook], category: run, operation: run, effects: [exec]}
+  - {id: vite.build, program: [vite, next, nuxt, astro, docusaurus, storybook, mkdocs, hugo, zola, mdbook], sub: [build], category: build, operation: build}
+
+  - {id: go, program: [go], category: build, operation: build.go}
+  - {id: go.build, program: [go], sub: [build], category: build, operation: build.go}
+  - {id: go.vet, program: [go], sub: [vet], category: lint, operation: lint.go.vet}
+  - {id: go.fmt, program: [go], sub: [fmt], category: lint, operation: lint.go.fmt}
+  - {id: go.test, program: [go], sub: [test], category: test, operation: test.go}
+  - {id: go.run, program: [go], sub: [run], category: run, operation: run.go, effects: [exec]}
+  - {id: go.mod, program: [go], sub: [mod], category: package, operation: package.go.mod, effects: [net_out]}
+  - {id: go.get, program: [go], sub: [get], category: package, operation: package.go.get, effects: [net_out]}
+  - {id: go.install, program: [go], sub: [install], category: package, operation: package.go.install, effects: [net_out]}
+  - {id: go.generate, program: [go], sub: [generate], category: build, operation: build.go.generate, effects: [exec]}
+  - {id: go.env, program: [go], sub: [env], category: tool, operation: tool.go.env}
+  - {id: go.list, program: [go], sub: [list], category: tool, operation: tool.go.list}
+  - {id: go.version, program: [go], sub: [version], category: tool, operation: tool.go.version}
+  - {id: go.doc, program: [go], sub: [doc], category: tool, operation: tool.go.doc}
+  - {id: go.tool, program: [go], sub: [tool], category: tool, operation: tool.go.tool}
+
+  - id: npm
+    program: [npm, pnpm, yarn, bun]
+    category: package
+    operation: package.npm
+    scripts:
+      - {pattern: "test*", category: test}
+      - {pattern: "e2e*", category: test}
+      - {pattern: "check*", category: test}
+      - {pattern: "build*", category: build}
+      - {pattern: "compile*", category: build}
+      - {pattern: "typecheck*", category: lint}
+      - {pattern: "lint*", category: lint}
+      - {pattern: "fmt*", category: lint}
+      - {pattern: "format*", category: lint}
+      - {pattern: "dev*", category: run}
+      - {pattern: "start*", category: run}
+      - {pattern: "serve*", category: run}
+      - {pattern: "preview*", category: run}
+  - id: npm.run
+    program: [npm, pnpm, yarn, bun]
+    sub: [run]
+    category: run
+    operation: run.npm_script
+    effects: [exec]
+    scripts:
+      - {pattern: "test*", category: test}
+      - {pattern: "e2e*", category: test}
+      - {pattern: "check*", category: test}
+      - {pattern: "build*", category: build}
+      - {pattern: "compile*", category: build}
+      - {pattern: "typecheck*", category: lint}
+      - {pattern: "lint*", category: lint}
+      - {pattern: "fmt*", category: lint}
+      - {pattern: "format*", category: lint}
+  - {id: npm.test, program: [npm, pnpm, yarn, bun], sub: [test], category: test, operation: test.npm}
+  - {id: npm.t, program: [npm, pnpm], sub: [t], category: test, operation: test.npm}
+  - {id: npm.install, program: [npm, pnpm, yarn, bun], sub: [install], category: package, operation: package.npm.install, effects: [net_out]}
+  - {id: npm.i, program: [npm, pnpm, bun], sub: [i], category: package, operation: package.npm.install, effects: [net_out]}
+  - {id: npm.ci, program: [npm], sub: [ci], category: package, operation: package.npm.install, effects: [net_out]}
+  - {id: npm.add, program: [npm, pnpm, yarn, bun], sub: [add], category: package, operation: package.npm.add, effects: [net_out]}
+  - {id: npm.remove, program: [npm, pnpm, yarn, bun], sub: [remove], category: package, operation: package.npm.remove}
+  - {id: npm.update, program: [npm, pnpm, yarn, bun], sub: [update], category: package, operation: package.npm.update, effects: [net_out]}
+  - {id: npm.exec, program: [npm, pnpm, yarn, bun], sub: [exec], category: run, operation: run.npm_exec, effects: [exec]}
+  - {id: npm.publish, program: [npm, pnpm, yarn], sub: [publish], category: package, operation: package.npm.publish, effects: [net_out, remote_write]}
+
+  - id: make
+    program: [make, gmake]
+    category: build
+    operation: build.make
+    scripts:
+      - {pattern: "test*", category: test}
+      - {pattern: "check*", category: test}
+      - {pattern: "lint*", category: lint}
+      - {pattern: "fmt*", category: lint}
+      - {pattern: "clean*", category: edit}
+      - {pattern: "run*", category: run}
+      - {pattern: "install*", category: package}
+  - id: task
+    program: [task, just]
+    category: run
+    operation: run.task
+    effects: [exec]
+    scripts:
+      - {pattern: "test*", category: test}
+      - {pattern: "check*", category: test}
+      - {pattern: "gate*", category: test}
+      - {pattern: "build*", category: build}
+      - {pattern: "generate*", category: build}
+      - {pattern: "lint*", category: lint}
+      - {pattern: "fmt*", category: lint}
+      - {pattern: "format*", category: lint}
+      - {pattern: "clean*", category: edit}
+
+  - {id: pip, program: [pip, pip3, pipx, poetry, conda, gem, bundle, composer, apt, apt-get, dnf, rpm, brew, snap, flatpak, nix-env, asdf, mise, npm-check-updates], category: package, operation: package, effects: [net_out]}
+  - {id: uv, program: [uv], category: package, operation: package.uv, effects: [net_out]}
+  - {id: uv.run, program: [uv, poetry], sub: [run], category: run, operation: run.uv, effects: [exec]}
+  - {id: pacman, program: [pacman, yay, paru], category: package, operation: package.pacman}
+  - id: pacman.query
+    program: [pacman, yay, paru]
+    flags_any: [-Q, --query, -Ss, -Si, -F]
+    category: list
+    operation: package.query
+
+  - {id: docker, program: [docker, podman, nerdctl, docker-compose, crictl, ctr, kubectl, oc, helm, kind, k3d, minikube, k9s, kustomize, skaffold, tilt, buildah, skopeo, dive, lazydocker, argocd, kubeseal, oras, terraform, tofu, pulumi, ansible, ansible-playbook, vagrant, aws, gcloud, az], category: container, operation: container}
+  - id: docker.exec
+    program: [docker, podman, kubectl]
+    sub: [exec]
+    category: container
+    operation: container.exec
+    effects: [exec]
+  - id: docker.build
+    program: [docker, podman, buildah]
+    sub: [build]
+    category: container
+    operation: container.build

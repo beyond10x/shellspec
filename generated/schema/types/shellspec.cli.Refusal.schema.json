@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.cli.Refusal",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:52f7aad660d7df381eb7d9ed24e743f3f3c83ede0bf3e1473152d7968550baf3",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.cli.Refusal": {
+      "title": "Refusal",
+      "x-ess-name": "shellspec.cli.Refusal",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "detail"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,69 @@
+format: ess-cli/2
+binary: shellspec
+about: Lift shell command strings into one IR and categorise every simple command
+globals:
+  config: config
+  state: state-dir
+  output: output
+callables:
+  lift:
+    target: {kind: local, owner: shellspec.cli, action: lift}
+    input: shellspec.cli.LiftInput
+    result: shellspec.cli.LiftResult
+    errors: {}
+  invocations:
+    target: {kind: local, owner: shellspec.cli, action: invocations}
+    input: shellspec.cli.InvocationsInput
+    result: shellspec.cli.InvocationsResult
+    errors:
+      ruleset_invalid: shellspec.cli.Refusal
+  shape:
+    target: {kind: local, owner: shellspec.cli, action: shape}
+    input: shellspec.cli.ShapeInput
+    result: shellspec.cli.ShapeResult
+    errors: {}
+  rules_check:
+    target: {kind: local, owner: shellspec.cli, action: rules_check}
+    input: shellspec.cli.RulesCheckInput
+    result: shellspec.cli.RulesCheckResult
+    errors:
+      ruleset_invalid: shellspec.cli.Refusal
+  corpus_stats:
+    target: {kind: local, owner: shellspec.cli, action: corpus_stats}
+    input: shellspec.cli.CorpusStatsInput
+    result: shellspec.cli.CorpusStats
+    errors:
+      input_unreadable: shellspec.cli.Refusal
+      ruleset_invalid: shellspec.cli.Refusal
+commands:
+  - path: [lift]
+    callable: lift
+    about: Print the shell-ir/1 tree of one command string
+    arguments:
+      - {field: dialect, source: {kind: option, long: dialect}}
+      - {field: command, source: {kind: option, long: command}}
+  - path: [invocations]
+    callable: invocations
+    about: Print every simple command of one command string, in execution order, with its category
+    arguments:
+      - {field: dialect, source: {kind: option, long: dialect}}
+      - {field: command, source: {kind: option, long: command}}
+      - {field: ruleset, source: {kind: option, long: ruleset}}
+  - path: [shape]
+    callable: shape
+    about: Print the redacted shape of one command string
+    arguments:
+      - {field: dialect, source: {kind: option, long: dialect}}
+      - {field: command, source: {kind: option, long: command}}
+  - path: [rules, check]
+    callable: rules_check
+    about: Check a ruleset for ties, unknown categories and wrappers without arity
+    arguments:
+      - {field: ruleset, source: {kind: option, long: ruleset}}
+  - path: [corpus, stats]
+    callable: corpus_stats
+    about: Count parse refusals, categories and unk over a JSON-lines file of commands
+    arguments:
+      - {field: input, source: {kind: option, long: input}}
+      - {field: dialect, source: {kind: option, long: dialect}}
+      - {field: ruleset, source: {kind: option, long: ruleset}}

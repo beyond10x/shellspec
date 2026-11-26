@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.syntax.Dialect",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:3ab17610bb6c4830e1efe8937e008482559b21b109a7c692740caef5e0cef987",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.syntax.Dialect": {
+      "title": "Dialect",
+      "description": "The shell whose syntax the input is read in.",
+      "x-ess-name": "shellspec.syntax.Dialect",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "bash",
+        "sh",
+        "zsh",
+        "fish"
+      ]
+    }
+  }
+}

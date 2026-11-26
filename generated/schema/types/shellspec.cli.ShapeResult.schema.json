@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.cli.ShapeResult",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:61d929707d77ec8c3f6d38a78909a85f6836b97ab8ae20b3417c0664065960be",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.cli.ShapeResult": {
+      "title": "ShapeResult",
+      "x-ess-name": "shellspec.cli.ShapeResult",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "shape": {
+          "description": "The redacted form of the script (§ 7.1); it holds no value of the input.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "shape"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

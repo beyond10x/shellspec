@@ -1,0 +1,23 @@
+{
+  "binary": "shellspec",
+  "files": [
+    "Cargo.toml",
+    "README.md",
+    "binding.json",
+    "completions/shellspec.bash",
+    "help.txt",
+    "src/lib.rs",
+    "src/main.rs",
+    "src/runtime.rs",
+    "src/wire.rs"
+  ],
+  "format": "ess-cli-artifacts/1",
+  "obligations": [
+    "handler:corpus_stats: implement the owner-qualified callable and its declared result/error contract",
+    "handler:invocations: implement the owner-qualified callable and its declared result/error contract",
+    "handler:lift: implement the owner-qualified callable and its declared result/error contract",
+    "handler:rules_check: implement the owner-qualified callable and its declared result/error contract",
+    "handler:shape: implement the owner-qualified callable and its declared result/error contract"
+  ],
+  "package": "shellspec-cli-contract"
+}

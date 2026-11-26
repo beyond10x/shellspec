@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.classification.Category",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:ffd9b8e862484f8bc7b910888a3253cb48d17ba7e64157b584f0f1065d017014",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.Category": {
+      "title": "Category",
+      "x-ess-name": "shellspec.classification.Category",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "navigate",
+        "read",
+        "list",
+        "search",
+        "filter",
+        "output",
+        "edit",
+        "build",
+        "test",
+        "lint",
+        "run",
+        "vcs",
+        "forge",
+        "network",
+        "package",
+        "process",
+        "environment",
+        "system",
+        "container",
+        "tool",
+        "unk"
+      ]
+    }
+  }
+}

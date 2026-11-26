@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.classification.RulesetDigest",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:456e30eb81135a25022c43a4615399d29b67d74f947f7c9c61a6f6120d653e68",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.RulesetDigest": {
+      "title": "RulesetDigest",
+      "description": "`sha256:` and the hex digest over every rules file, by name, in name order.",
+      "x-ess-name": "shellspec.classification.RulesetDigest",
+      "x-ess-kind": "newtype",
+      "type": "string"
+    }
+  }
+}

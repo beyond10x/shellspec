@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.classification.ProgramRule",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:95bad2b91740784d598b2db67daf0a93a94d979bf9a48795a2b586d9abf8c71a",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.ProgramRule": {
+      "title": "ProgramRule",
+      "description": "How a program's words are read: its flags that take a value, prefixes of words to skip (`cargo +toolchain`), and how many positionals form its subcommand path.",
+      "x-ess-name": "shellspec.classification.ProgramRule",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "flags_with_value": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skip_prefix": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subcommands": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "names"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

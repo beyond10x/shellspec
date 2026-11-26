@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.classification.Rule",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:e13b9f0e227217065c24348f0dcfd00ed733ef809c43852e3aa704b40b31bdf8",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.Category": {
+      "title": "Category",
+      "x-ess-name": "shellspec.classification.Category",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "navigate",
+        "read",
+        "list",
+        "search",
+        "filter",
+        "output",
+        "edit",
+        "build",
+        "test",
+        "lint",
+        "run",
+        "vcs",
+        "forge",
+        "network",
+        "package",
+        "process",
+        "environment",
+        "system",
+        "container",
+        "tool",
+        "unk"
+      ]
+    },
+    "shellspec.classification.Effect": {
+      "title": "Effect",
+      "x-ess-name": "shellspec.classification.Effect",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "fs_read",
+        "fs_write",
+        "fs_delete",
+        "net_out",
+        "remote_write",
+        "process_signal",
+        "exec",
+        "stdin",
+        "wait"
+      ]
+    },
+    "shellspec.classification.NestedKind": {
+      "title": "NestedKind",
+      "description": "How a program carries a script of its own (§ 3.2).",
+      "x-ess-name": "shellspec.classification.NestedKind",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "shell_c",
+        "eval",
+        "ssh"
+      ]
+    },
+    "shellspec.classification.Rule": {
+      "title": "Rule",
+      "description": "One classification. It matches a program name, a subcommand prefix and flag conditions; the most specific match wins (§ 6.2 step 6).",
+      "x-ess-name": "shellspec.classification.Rule",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "program": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sub": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "flags_any": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "flags_none": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "category": {
+          "$ref": "#/$defs/shellspec.classification.Category"
+        },
+        "operation": {
+          "type": "string"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.classification.Effect"
+          }
+        },
+        "stream": {
+          "$ref": "#/$defs/shellspec.classification.StreamRule"
+        },
+        "scripts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.classification.ScriptCase"
+          }
+        },
+        "nested": {
+          "$ref": "#/$defs/shellspec.classification.NestedKind"
+        }
+      },
+      "required": [
+        "id",
+        "program",
+        "category"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.classification.ScriptCase": {
+      "title": "ScriptCase",
+      "description": "A script name (`test*` is a prefix) of `npm run <script>` or `task <name>` and its category.",
+      "x-ess-name": "shellspec.classification.ScriptCase",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "pattern": {
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/shellspec.classification.Category"
+        }
+      },
+      "required": [
+        "pattern",
+        "category"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.classification.StreamRule": {
+      "title": "StreamRule",
+      "description": "A program that is a filter when it has no file operand (§ 6.2 step 5). The first `operands_before_files` positionals are no file (a pattern, a script), unless one of `pattern_flags` gave the pattern (`grep -e x f`).",
+      "x-ess-name": "shellspec.classification.StreamRule",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "file_category": {
+          "$ref": "#/$defs/shellspec.classification.Category"
+        },
+        "operands_before_files": {
+          "type": "integer"
+        },
+        "pattern_flags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "file_category",
+        "operands_before_files"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

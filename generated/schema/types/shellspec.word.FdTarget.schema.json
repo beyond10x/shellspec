@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.word.FdTarget",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:3888d6ab3327b59886f55ed49e1dba1f8783e58be165a87bd0ccb52761611808",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.word.FdTarget": {
+      "title": "FdTarget",
+      "x-ess-name": "shellspec.word.FdTarget",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "fd": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "fd"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

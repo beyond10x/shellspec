@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.invocation.Stage",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:ee8bf92a13e4427ff0162b2857939ae8e2c7721efeee702b34a21523433c2a92",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.invocation.Stage": {
+      "title": "Stage",
+      "description": "The pipeline an invocation is a stage of; a command outside a pipe is the one stage of its own.",
+      "x-ess-name": "shellspec.invocation.Stage",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "pipeline": {
+          "type": "integer"
+        },
+        "index": {
+          "type": "integer"
+        },
+        "of": {
+          "type": "integer"
+        },
+        "role": {
+          "$ref": "#/$defs/shellspec.invocation.StageRole"
+        }
+      },
+      "required": [
+        "pipeline",
+        "index",
+        "of",
+        "role"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.invocation.StageRole": {
+      "title": "StageRole",
+      "x-ess-name": "shellspec.invocation.StageRole",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "alone",
+        "head",
+        "middle",
+        "tail"
+      ]
+    }
+  }
+}

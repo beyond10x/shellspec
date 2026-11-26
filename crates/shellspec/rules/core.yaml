@@ -1,0 +1,232 @@
+format: shellspec-rules/1
+
+programs:
+  - names: [head, tail]
+    flags_with_value: [-n, -c, --lines, --bytes, --pid, -s, --sleep-interval]
+  - names: [grep, egrep, fgrep]
+    flags_with_value: [-e, -f, -A, -B, -C, -m, -d, -D, --regexp, --file, --max-count, --context, --after-context, --before-context, --label, --color]
+  - names: [rg]
+    flags_with_value: [-e, -f, -g, -t, -T, -A, -B, -C, -m, -j, -M, -r, --regexp, --file, --glob, --iglob, --type, --type-not, --max-count, --context, --after-context, --before-context, --max-columns, --max-depth, --sort, --sortr, --replace, --threads, --type-add, --color]
+  - names: [ag]
+    flags_with_value: [-A, -B, -C, -G, -m, --file-search-regex, --max-count, --context, --ignore]
+  - names: [sed]
+    flags_with_value: [-e, -f, --expression, --file, -l, --line-length]
+  - names: [awk, gawk, mawk]
+    flags_with_value: [-F, -v, -f, --field-separator, --assign, --file]
+  - names: [jq, yq, gojq, jaq]
+    flags_with_value: [--arg, --argjson, --slurpfile, --rawfile, --indent, -f, --from-file, --jsonargs, --args, -L]
+  - names: [sort]
+    flags_with_value: [-k, -t, -o, -S, -T, --key, --field-separator, --output, --buffer-size, --temporary-directory, --parallel]
+  - names: [cut]
+    flags_with_value: [-d, -f, -c, -b, --delimiter, --fields, --characters, --bytes, --output-delimiter]
+  - names: [uniq]
+    flags_with_value: [-f, -s, -w, --skip-fields, --skip-chars, --check-chars]
+  - names: [column]
+    flags_with_value: [-s, -t, -c, -o, --separator, --output-separator]
+  - names: [find]
+    flags_with_value: [-name, -iname, -path, -ipath, -type, -maxdepth, -mindepth, -newer, -mtime, -mmin, -size, -regex, -iregex, -user, -group, -perm, -printf, -fprintf]
+  - names: [ls]
+    flags_with_value: [-I, --ignore, -w, --width, --sort, --time-style, --color]
+  - names: [tree]
+    flags_with_value: [-L, -I, -P, --filelimit]
+  - names: [du]
+    flags_with_value: [-d, --max-depth, --exclude, -t, --threshold]
+  - names: [xxd, od, hexdump]
+    flags_with_value: [-l, -s, -c, -n, -N, -j, -t, -A]
+  - names: [diff]
+    flags_with_value: [-U, -C, --unified, --context, -x, --exclude, -I, --ignore-matching-lines, --label]
+  - names: [tar]
+    flags_with_value: [-C, --directory, -f, --file, --exclude, -T, --files-from]
+  - names: [kill, pkill, killall]
+    flags_with_value: [-s, --signal, -n, -u, -g, -t]
+  - names: [pgrep, pidof]
+    flags_with_value: [-u, -g, -P, -t, -s]
+  - names: [ps]
+    flags_with_value: [-o, -p, -u, -C, -G, --sort, --pid, --ppid, -q]
+  - names: [date]
+    flags_with_value: [-d, --date, -r, --reference, -u]
+  - names: [mkdir, chmod, chown, cp, mv, install]
+    flags_with_value: [-m, --mode, -t, --target-directory, -S, --suffix, -o, -g]
+  - names: [ln]
+    flags_with_value: [-t, --target-directory, -S, --suffix]
+  - names: [stat]
+    flags_with_value: [-c, --format, --printf, -f]
+  - names: [systemctl]
+    flags_with_value: [-p, --property, -n, --lines, -t, --type, --state, -o, --output, -H, --host, -M, --machine]
+    subcommands: 1
+  - names: [journalctl]
+    flags_with_value: [-u, --unit, --user-unit, -n, --lines, -p, --priority, -S, --since, -U, --until, -o, --output, -t, --identifier, -b, --boot, -g, --grep, --field]
+  - names: [ssh]
+    flags_with_value: [-p, -i, -l, -o, -F, -J, -L, -R, -D, -E, -b, -c, -e, -m, -O, -Q, -S, -W, -w, -B, -I]
+  - names: [curl]
+    flags_with_value: [-X, --request, -H, --header, -d, --data, --data-raw, --data-binary, --data-urlencode, -F, --form, -T, --upload-file, -o, --output, -u, --user, -A, --user-agent, -e, --referer, -m, --max-time, --connect-timeout, -w, --write-out, -b, --cookie, -c, --cookie-jar, --json, --retry, --resolve, -x, --proxy, --cacert, --cert, --key, -K, --config, -r, --range, --unix-socket]
+  - names: [wget]
+    flags_with_value: [-O, --output-document, -P, --directory-prefix, -t, --tries, -T, --timeout, --header, -U, --user-agent, --post-data, --post-file]
+  - names: [scp, rsync]
+    flags_with_value: [-P, -i, -o, -F, -J, -l, -e, --rsh, --exclude, --include, --filter, --exclude-from, --include-from, --files-from, --port]
+  - names: [ping]
+    flags_with_value: [-c, -i, -W, -w, -s, -t, -I]
+  - names: [nc, ncat, netcat]
+    flags_with_value: [-w, -p, -s, -q, -i]
+  - names: [seq]
+    flags_with_value: [-f, -s, --format, --separator]
+  - names: [wc]
+    flags_with_value: [--files0-from]
+  - names: [tr, nl, paste, fold, fmt, tac, rev, base64, md5sum, sha1sum, sha256sum, sha512sum, b2sum, cksum, strings, file, cmp, comm, iconv, envsubst, expand, unexpand]
+    flags_with_value: [-d, -s, -w, -n, -b, -f, -t, -v, -i, --delimiters, --width]
+
+rules:
+  - {id: cd, program: [cd, pushd], category: navigate}
+  - {id: popd, program: [popd], category: navigate}
+
+  - id: cat
+    program: [cat, bat, batcat]
+    category: output
+    stream: {file_category: read, operands_before_files: 0}
+  - id: head-tail
+    program: [head, tail]
+    category: filter
+    stream: {file_category: read, operands_before_files: 0}
+  - {id: less, program: [less, more, most], category: read, effects: [fs_read]}
+  - id: sed
+    program: [sed, gsed]
+    category: filter
+    stream: {file_category: read, operands_before_files: 1, pattern_flags: [-e, -f, --expression, --file]}
+  - id: sed.in-place
+    program: [sed, gsed]
+    flags_any: [-i, --in-place]
+    category: edit
+    operation: edit.in_place
+    effects: [fs_read, fs_write]
+  - id: awk
+    program: [awk, gawk, mawk]
+    category: filter
+    stream: {file_category: read, operands_before_files: 1, pattern_flags: [-f, --file]}
+  - id: jq
+    program: [jq, yq, gojq, jaq]
+    category: filter
+    stream: {file_category: read, operands_before_files: 1, pattern_flags: [-f, --from-file]}
+  - id: jq.null-input
+    program: [jq, yq, gojq, jaq]
+    flags_any: [-n, --null-input]
+    category: output
+  - id: count
+    program: [wc]
+    category: filter
+    stream: {file_category: read, operands_before_files: 0}
+  - id: sort
+    program: [sort, uniq, join, nl, paste, fold, fmt, tac, rev, column, expand, unexpand, base64, iconv, strings]
+    category: filter
+    stream: {file_category: read, operands_before_files: 0}
+  - id: cut
+    program: [cut]
+    category: filter
+    stream: {file_category: read, operands_before_files: 0}
+  - id: tr
+    program: [tr]
+    category: filter
+    stream: {file_category: filter, operands_before_files: 2}
+  - id: envsubst
+    program: [envsubst, fzf, ansi2txt, xargs]
+    category: filter
+    stream: {file_category: filter, operands_before_files: 99}
+  - id: hexdump
+    program: [xxd, od, hexdump]
+    category: filter
+    stream: {file_category: read, operands_before_files: 0}
+  - {id: diff, program: [diff, cmp, comm, colordiff, difft, delta], category: read, effects: [fs_read]}
+  - {id: checksum, program: [md5sum, sha1sum, sha256sum, sha512sum, b2sum, cksum, file, readelf, objdump, llvm-objdump, nm, llvm-nm, ldd, size, llvm-readobj, otool, dwarfdump, llvm-dwarfdump, llvm-readelf, javap], category: read, effects: [fs_read]}
+
+  - id: grep
+    program: [grep, egrep, fgrep]
+    category: search
+    stream: {file_category: search, operands_before_files: 1, pattern_flags: [-e, -f, --regexp, --file]}
+  - id: grep.recursive
+    program: [grep, egrep, fgrep]
+    flags_any: [-r, -R, --recursive, --dereference-recursive]
+    category: search
+    effects: [fs_read]
+  - id: rg
+    program: [rg, ag, ack]
+    category: search
+    effects: [fs_read]
+    stream: {file_category: search, operands_before_files: 1, pattern_flags: [-e, -f, --regexp, --file]}
+  - id: rg.files
+    program: [rg]
+    flags_any: [--files, --type-list]
+    category: list
+    effects: [fs_read]
+  - {id: ast-grep, program: [ast-grep, sg], category: search, effects: [fs_read]}
+
+  - {id: ls, program: [ls, exa, eza, tree, stat, du, realpath, readlink, fd, fdfind, locate, lsattr], category: list, effects: [fs_read]}
+  - {id: find, program: [find], category: list, effects: [fs_read]}
+  - id: find.delete
+    program: [find]
+    flags_any: [-delete]
+    category: edit
+    effects: [fs_read, fs_delete]
+  - id: find.exec
+    program: [find]
+    flags_any: [-exec, -execdir, -ok, -okdir]
+    category: list
+    effects: [fs_read, exec]
+  - {id: which, program: [which, whereis, type, whence, hash], category: list}
+  - {id: command.lookup, program: [command], category: list}
+
+  - {id: echo, program: [echo, printf, "true", "false", ":", seq, yes, basename, dirname, pwd, tput, clear, expr, bc, numfmt, cowsay, figlet, notify-send, factor], category: output}
+  - {id: date, program: [date, cal], category: output}
+  - {id: test, program: ["[", test], category: output}
+
+  - {id: tee, program: [tee], category: edit, effects: [fs_write, stdin]}
+  - {id: rm, program: [rm, rmdir, unlink, shred, trash, trash-put], category: edit, effects: [fs_delete]}
+  - {id: write, program: [cp, mv, mkdir, touch, chmod, chown, chgrp, ln, install, truncate, patch, mkfifo, mktemp, dd, rename, setfacl, split, csplit], category: edit, effects: [fs_write]}
+  - {id: archive, program: [tar, zip, unzip, gzip, gunzip, xz, unxz, zstd, unzstd, bzip2, bunzip2, 7z], category: edit, effects: [fs_read, fs_write]}
+  - id: archive.list
+    program: [tar]
+    flags_any: [-t, --list]
+    category: list
+    effects: [fs_read]
+  - {id: zcat, program: [zcat, zless, xzcat, zstdcat, bzcat], category: read, effects: [fs_read]}
+
+  - {id: sleep, program: [sleep], category: process, effects: [wait]}
+  - {id: wait, program: [wait], category: process, effects: [wait]}
+  - {id: kill, program: [kill, pkill, killall], category: process, effects: [process_signal]}
+  - {id: ps, program: [ps, pgrep, pidof, jobs, top, htop, btop, lsof, fuser, pstree, disown, bg, fg, tmux, screen, nproc, prlimit, taskset, renice], category: process}
+
+  - {id: export, program: [export, set, unset, source, ".", alias, unalias, local, declare, typeset, readonly, shopt, setopt, unsetopt, trap, ulimit, umask, read, shift, return, exit, break, continue, rehash, history, fc, printenv, env, stty, locale, emulate, autoload, zmodload, bindkey, getopts, let, exec, builtin, noglob, time], category: environment}
+  - id: eval
+    program: [eval]
+    category: environment
+    effects: [exec]
+    nested: eval
+
+  - {id: system, program: [systemctl, journalctl, df, free, uptime, uname, hostname, hostnamectl, whoami, id, groups, lscpu, lsblk, lsusb, lspci, mount, umount, dmesg, sysctl, loginctl, crontab, nvidia-smi, sensors, ip, ss, netstat, vmstat, iostat, getent, timedatectl, localectl, last, w, who, swapon, findmnt, blkid, inxi, neofetch, fastfetch, cpupower, powerprofilesctl, coredumpctl, busctl, dbus-send, udevadm, modprobe, lsmod, quota, setfattr, getfattr, ssh-add, ssh-keygen, lslocks, lsns, systemd-analyze, systemd-cgls, systemd-cgtop, pactl, xrandr, fc-match, fc-list], category: system}
+  - id: systemctl.change
+    program: [systemctl]
+    sub: [restart]
+    category: system
+    operation: system.service.restart
+
+  - {id: curl, program: [curl, wget, http, https, xh, httpie, websocat, grpcurl], category: network, effects: [net_out]}
+  - id: curl.write
+    program: [curl, xh, http, https, grpcurl]
+    flags_any: [-X, --request, -d, --data, --data-raw, --data-binary, --data-urlencode, -F, --form, -T, --upload-file, --json]
+    category: network
+    effects: [net_out, remote_write]
+  - id: ssh
+    program: [ssh]
+    category: network
+    effects: [net_out, exec]
+    nested: ssh
+  - {id: scp, program: [scp, sftp, rsync], category: network, effects: [net_out, fs_read, fs_write]}
+  - {id: ping, program: [ping, dig, nslookup, host, nc, ncat, netcat, telnet, traceroute, mtr, whois, openssl, nmap, tailscale, wg], category: network, effects: [net_out]}
+  - {id: db, program: [psql, mysql, mariadb, redis-cli, mongosh, sqlcmd, clickhouse-client], category: network, effects: [net_out]}
+
+  - id: shell
+    program: [bash, sh, zsh, dash, ksh, fish, ash, busybox]
+    category: run
+    effects: [exec]
+    nested: shell_c
+  - {id: interpreter, program: [python, python3, python2, node, deno, ruby, perl, php, lua, luajit, Rscript, julia, java, osascript, pwsh, tclsh, sqlite3, duckdb, gpg, ffmpeg, bwrap], category: run, effects: [exec]}
+  - {id: open, program: [open, xdg-open, gio, brave, brave-browser, firefox, chromium, google-chrome, google-chrome-stable], category: run, effects: [exec]}
+  - {id: profile, program: [hyperfine, perf, valgrind, strace, ltrace, gdb, lldb, rr, heaptrack, flamegraph], category: run, effects: [exec]}

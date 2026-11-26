@@ -1,0 +1,10 @@
+format: ess/37
+system: shellspec
+version: v1
+
+domains:
+  - shellspec.syntax
+  - shellspec.word
+  - shellspec.invocation
+  - shellspec.classification
+  - shellspec.cli

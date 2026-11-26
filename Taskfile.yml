@@ -1,0 +1,43 @@
+version: '3'
+
+tasks:
+  check:
+    desc: Run the repository gate.
+    cmds:
+      - task: check:spec
+      - task: check:generated
+      - task: check:rust
+      - task: test
+
+  check:spec:
+    desc: Validate the specification and synthesize its conformance suite with no refusal.
+    cmds:
+      - ess specify validate --path spec
+      - mkdir -p target/spec && ess verify conform synthesize --path spec --out target/spec/suite.json
+
+  check:generated:
+    desc: Compare each generated directory, byte for byte, with a fresh generation. The lines are in scripts/check-generated.sh.
+    cmds:
+      - sh scripts/check-generated.sh
+
+  generate:
+    desc: Replace each generated directory with a fresh generation. A generated file is never edited.
+    cmds:
+      - sh scripts/check-generated.sh --write
+
+  check:rust:
+    desc: Format and lints of the hand-written crates.
+    cmds:
+      - cargo fmt --check
+      - cargo clippy --workspace --all-targets --locked -- -D warnings
+
+  test:
+    desc: Tests with cargo-nextest; .config/nextest.toml ends a test at 60 s and the run at 120 s.
+    cmds:
+      - cargo nextest run --workspace --locked
+
+  site:
+    desc: Build the documentation site as CI does (npm ci and npm run build in website/).
+    cmds:
+      - npm --prefix website ci
+      - npm --prefix website run build

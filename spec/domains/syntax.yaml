@@ -1,0 +1,247 @@
+domain: shellspec.syntax
+
+summary: >-
+  One shell command string lifted into one tree, `shell-ir/1` (docs/design.md § 3). Every node
+  carries the byte range of the input it was lifted from. A region no parser accepted is an `Unk`
+  node with a digest and a length, never its text.
+
+types:
+  - name: shellspec.syntax.Dialect
+    kind: enum
+    variants: [bash, sh, zsh, fish]
+    naming:
+      summary: The shell whose syntax the input is read in.
+
+  - name: shellspec.syntax.ParserId
+    kind: newtype
+    of: String
+    naming:
+      summary: The parser and its version that produced a script or refused a region, `brush-parser/0.4.0`.
+
+  - name: shellspec.syntax.Span
+    kind: struct
+    naming:
+      summary: A byte range of the input, start inclusive, end exclusive.
+    fields:
+      - {name: start, type: Integer}
+      - {name: end, type: Integer}
+
+  - name: shellspec.syntax.UnkReason
+    kind: enum
+    variants: [syntax, dialect, dynamic, no_rule, depth]
+    naming:
+      summary: >-
+        Why shellspec could not say (docs/design.md § 3.3): a region the parser refused, a
+        construct of another dialect, a dynamic program word, a static program no rule names, a
+        nested script deeper than 3.
+
+  - name: shellspec.syntax.Diagnostic
+    kind: struct
+    naming:
+      summary: One refusal while lifting. The code names the parser's error kind; no input text is kept.
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: reason, type: shellspec.syntax.UnkReason}
+      - {name: parser, type: shellspec.syntax.ParserId}
+      - {name: code, type: String}
+
+  - name: shellspec.syntax.Script
+    kind: struct
+    naming:
+      summary: The whole input, or the body of a substitution or a nested script.
+    fields:
+      - {name: dialect, type: shellspec.syntax.Dialect}
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: body, type: List<shellspec.syntax.Statement>}
+      - {name: diagnostics, type: List<shellspec.syntax.Diagnostic>}
+
+  - name: shellspec.syntax.Separator
+    kind: enum
+    variants: [newline, semi, amp, end]
+    naming:
+      summary: What ends a statement; `amp` runs it in the background, `end` is the end of the list.
+
+  - name: shellspec.syntax.Statement
+    kind: struct
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: body, type: shellspec.syntax.Node}
+      - {name: sep, type: shellspec.syntax.Separator}
+
+  - name: shellspec.syntax.AndOrOp
+    kind: enum
+    variants: [and, or]
+
+  - name: shellspec.syntax.AndOrItem
+    kind: struct
+    fields:
+      - {name: op, type: shellspec.syntax.AndOrOp}
+      - {name: node, type: shellspec.syntax.Node}
+
+  - name: shellspec.syntax.AndOr
+    kind: struct
+    naming:
+      summary: "`a && b || c`; fish `a; and b`."
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: first, type: shellspec.syntax.Node}
+      - {name: rest, type: List<shellspec.syntax.AndOrItem>}
+
+  - name: shellspec.syntax.Not
+    kind: struct
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: body, type: shellspec.syntax.Node}
+
+  - name: shellspec.syntax.PipeLink
+    kind: enum
+    variants: [stdout, stdout_stderr]
+    naming:
+      summary: "`|` passes stdout; `|&` and fish `&|` pass stderr too."
+
+  - name: shellspec.syntax.Pipeline
+    kind: struct
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: stages, type: List<shellspec.syntax.Node>}
+      - {name: links, type: List<shellspec.syntax.PipeLink>}
+
+  - name: shellspec.syntax.Assignment
+    kind: struct
+    naming:
+      summary: "`X=1` before a command or alone; an array assignment has one value per element."
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: name, type: String}
+      - {name: values, type: List<shellspec.word.Word>}
+      - {name: append, type: Boolean}
+
+  - name: shellspec.syntax.Command
+    kind: struct
+    naming:
+      summary: A simple command.
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: assignments, type: List<shellspec.syntax.Assignment>}
+      - {name: words, type: List<shellspec.word.Word>}
+      - {name: redirects, type: List<shellspec.word.Redirect>}
+
+  - name: shellspec.syntax.Block
+    kind: struct
+    naming:
+      summary: A statement list with redirects, the body of a `Subshell` `( … )` or a `Group` `{ …; }`, fish `begin; …; end`.
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: body, type: List<shellspec.syntax.Statement>}
+      - {name: redirects, type: List<shellspec.word.Redirect>}
+
+  - name: shellspec.syntax.CondClause
+    kind: struct
+    fields:
+      - {name: condition, type: List<shellspec.syntax.Statement>}
+      - {name: body, type: List<shellspec.syntax.Statement>}
+
+  - name: shellspec.syntax.If
+    kind: struct
+    naming:
+      summary: "`if`, its `elif` clauses in order, and the `else` body (empty when there is none)."
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: clauses, type: List<shellspec.syntax.CondClause>}
+      - {name: otherwise, type: List<shellspec.syntax.Statement>}
+      - {name: redirects, type: List<shellspec.word.Redirect>}
+
+  - name: shellspec.syntax.Loop
+    kind: struct
+    naming:
+      summary: The body of a `While` or an `Until` node.
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: condition, type: List<shellspec.syntax.Statement>}
+      - {name: body, type: List<shellspec.syntax.Statement>}
+      - {name: redirects, type: List<shellspec.word.Redirect>}
+
+  - name: shellspec.syntax.For
+    kind: struct
+    naming:
+      summary: "`for x in …; do …; done`; an arithmetic `for ((…))` keeps its header text in `arith`."
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: variable, type: String}
+      - {name: items, type: Optional<List<shellspec.word.Word>>}
+      - {name: arith, type: Optional<String>}
+      - {name: body, type: List<shellspec.syntax.Statement>}
+      - {name: redirects, type: List<shellspec.word.Redirect>}
+
+  - name: shellspec.syntax.CaseArm
+    kind: struct
+    fields:
+      - {name: patterns, type: List<shellspec.word.Word>}
+      - {name: body, type: List<shellspec.syntax.Statement>}
+
+  - name: shellspec.syntax.Case
+    kind: struct
+    naming:
+      summary: "`case w in …) …;; esac`; fish `switch`."
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: word, type: shellspec.word.Word}
+      - {name: arms, type: List<shellspec.syntax.CaseArm>}
+      - {name: redirects, type: List<shellspec.word.Redirect>}
+
+  - name: shellspec.syntax.Function
+    kind: struct
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: name, type: String}
+      - {name: body, type: shellspec.syntax.Node}
+
+  - name: shellspec.syntax.Test
+    kind: struct
+    naming:
+      summary: "`[[ … ]]`, its operand words in order."
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: words, type: List<shellspec.word.Word>}
+      - {name: redirects, type: List<shellspec.word.Redirect>}
+
+  - name: shellspec.syntax.Arith
+    kind: struct
+    naming:
+      summary: "`(( … ))`."
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - {name: text, type: String}
+
+  - name: shellspec.syntax.Unk
+    kind: struct
+    naming:
+      summary: A region shellspec could not lift; its text is kept only as a digest and a length.
+    fields:
+      - {name: span, type: shellspec.syntax.Span}
+      - name: text_digest
+        type: String
+        summary: sha256 of the region's bytes, lower-case hex.
+      - {name: len, type: Integer}
+      - {name: reason, type: shellspec.syntax.UnkReason}
+      - {name: parser, type: shellspec.syntax.ParserId}
+
+  - name: shellspec.syntax.Node
+    kind: union
+    tag: kind
+    variants:
+      AndOr: shellspec.syntax.AndOr
+      Not: shellspec.syntax.Not
+      Pipeline: shellspec.syntax.Pipeline
+      Command: shellspec.syntax.Command
+      Subshell: shellspec.syntax.Block
+      Group: shellspec.syntax.Block
+      If: shellspec.syntax.If
+      While: shellspec.syntax.Loop
+      Until: shellspec.syntax.Loop
+      For: shellspec.syntax.For
+      Case: shellspec.syntax.Case
+      Function: shellspec.syntax.Function
+      Test: shellspec.syntax.Test
+      Arith: shellspec.syntax.Arith
+      Unk: shellspec.syntax.Unk

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.classification.ScriptCase",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:ae6d00609e6690da2d55dec8f68beeb61de0bd434875006772204e8ae9c41b7f",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.Category": {
+      "title": "Category",
+      "x-ess-name": "shellspec.classification.Category",
+      "x-ess-kind": "enum",
+      "type": "string",
+      "enum": [
+        "navigate",
+        "read",
+        "list",
+        "search",
+        "filter",
+        "output",
+        "edit",
+        "build",
+        "test",
+        "lint",
+        "run",
+        "vcs",
+        "forge",
+        "network",
+        "package",
+        "process",
+        "environment",
+        "system",
+        "container",
+        "tool",
+        "unk"
+      ]
+    },
+    "shellspec.classification.ScriptCase": {
+      "title": "ScriptCase",
+      "description": "A script name (`test*` is a prefix) of `npm run <script>` or `task <name>` and its category.",
+      "x-ess-name": "shellspec.classification.ScriptCase",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "pattern": {
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/shellspec.classification.Category"
+        }
+      },
+      "required": [
+        "pattern",
+        "category"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

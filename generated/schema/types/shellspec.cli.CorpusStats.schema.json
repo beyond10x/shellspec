@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/shellspec.cli.CorpusStats",
+  "x-ess-provenance": {
+    "system": "shellspec",
+    "specification_version": "v1",
+    "contract_digest": "slice-sha256/2:d5445c952ae0c1938b64e7441156272c3823738fa353ec35f13d903636c968f1",
+    "regenerate": "ess generate"
+  },
+  "$defs": {
+    "shellspec.classification.RulesetDigest": {
+      "title": "RulesetDigest",
+      "description": "`sha256:` and the hex digest over every rules file, by name, in name order.",
+      "x-ess-name": "shellspec.classification.RulesetDigest",
+      "x-ess-kind": "newtype",
+      "type": "string"
+    },
+    "shellspec.cli.CorpusStats": {
+      "title": "CorpusStats",
+      "description": "Counts over a file of commands. No command text; `unk_programs` names the programs no rule matched.",
+      "x-ess-name": "shellspec.cli.CorpusStats",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "ruleset": {
+          "$ref": "#/$defs/shellspec.classification.RulesetDigest"
+        },
+        "commands": {
+          "type": "integer"
+        },
+        "refused": {
+          "description": "Commands with at least one region the parser refused.",
+          "type": "integer"
+        },
+        "unk_regions": {
+          "type": "integer"
+        },
+        "invocations": {
+          "type": "integer"
+        },
+        "unk_invocations": {
+          "type": "integer"
+        },
+        "unk_permille": {
+          "type": "integer"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.cli.Count"
+          }
+        },
+        "unk_reasons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.cli.Count"
+          }
+        },
+        "unk_programs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.cli.Count"
+          }
+        },
+        "dominant": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellspec.cli.Count"
+          }
+        }
+      },
+      "required": [
+        "ruleset",
+        "commands",
+        "refused",
+        "unk_regions",
+        "invocations",
+        "unk_invocations",
+        "unk_permille",
+        "categories",
+        "unk_reasons",
+        "unk_programs",
+        "dominant"
+      ],
+      "additionalProperties": false
+    },
+    "shellspec.cli.Count": {
+      "title": "Count",
+      "x-ess-name": "shellspec.cli.Count",
+      "x-ess-kind": "struct",
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "key",
+        "count"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
