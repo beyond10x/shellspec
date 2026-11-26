@@ -4,7 +4,7 @@
   "x-ess-provenance": {
     "system": "shellspec",
     "specification_version": "v1",
-    "contract_digest": "slice-sha256/2:216fc54404b7d77c1314591a980ca65c0e6d65c878324afce49e65ba594bd635",
+    "contract_digest": "slice-sha256/2:a8fceae979fede7fa150a25b18bad0bdf3569747780d6d70fbf09673bbfba621",
     "regenerate": "ess generate"
   },
   "$defs": {

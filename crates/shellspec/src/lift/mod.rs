@@ -1,5 +1,5 @@
 //! Lifting: one command string and its dialect into one [`Script`]. Lifting never fails: a region
-//! no parser accepts becomes an [`Unk`] node and a [`Diagnostic`] (docs/design.md § 3.3, § 5.4).
+//! no parser accepts becomes an [`Unk`] node and a [`Diagnostic`] (design/design.md § 3.3, § 5.4).
 
 mod brush;
 mod fish;

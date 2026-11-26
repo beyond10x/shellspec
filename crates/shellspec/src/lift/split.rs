@@ -1,4 +1,4 @@
-//! The lexical fallback of docs/design.md § 5.4: a quote-aware pass that splits a refused script
+//! The lexical fallback of design/design.md § 5.4: a quote-aware pass that splits a refused script
 //! at top-level `;`, newline, `&&`, `||` and `&`, so the parts that parse alone are lifted.
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

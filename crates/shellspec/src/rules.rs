@@ -1,4 +1,4 @@
-//! The ruleset (`spec/domains/classification.yaml`, docs/design.md § 6): data in `rules/*.yaml`,
+//! The ruleset (`spec/domains/classification.yaml`, design/design.md § 6): data in `rules/*.yaml`,
 //! with a digest every classification reports.
 
 use std::collections::{BTreeMap, HashMap};

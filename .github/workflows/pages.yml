@@ -54,7 +54,7 @@ jobs:
             case "$f" in
               '') ;;
               .engineering/*) planning=1 ;;
-              website/* | docs/* | research/*) site=1 ;;
+              website/* | docs/*) site=1 ;;
               crates/* | spec/* | generated/*) code=1 ;;
               *.md) planning=1 ;;
               *) code=1 ;;

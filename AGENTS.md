@@ -3,7 +3,8 @@
 shellspec lifts one shell command string, as an agent's Bash tool sends it, into one IR (lists,
 `&&`/`||`, pipelines, simple commands, subshells, redirects, heredocs, substitutions), from bash,
 POSIX sh, zsh and fish syntax, and gives each simple command a category (read, search, build, test,
-vcs, network, …). Design: `docs/design.md`. Corpus numbers: `research/`.
+vcs, network, …). User documentation: `docs/`. Internal design notes: `design/design.md`. Corpus
+numbers: `research/`.
 
 First consumer: the `sessionspec` repository, which lifts each `ToolCall` of category execute
 through shellspec into its sub-commands.
@@ -18,12 +19,24 @@ shellspec.
 - **O6 — self-improvement, built into all of it.** The categories are what a session's record is
   measured by, so a change proposed from that record can be re-measured.
 
-## Phase: implementation
+## Specification first (ESS)
 
-The owner opened implementation on 2026-11-26: "Yeah, I mean, keep going. Just build this
-stuff." Specification first (ESS), as in the workspace's other `*spec` repositories: every noun of
-`docs/design.md` § 8 is declared in an ESS specification and `ess specify validate` passes before
-code uses it; the CLI is an `ess-cli/2` binding.
+As in the workspace's other `*spec` repositories, every noun of `design/design.md` § 8 is declared
+in an ESS specification and `ess specify validate` passes before code uses it; the CLI is an
+`ess-cli/2` binding.
+
+## Documents
+
+Documents state the product: what it does and why, in its own words. They never quote the owner or
+a session, never cite a chat as the reason for a design, and carry no decision history. Where a
+decision came from belongs in the commit message, not in a file the docs site publishes.
+
+- `docs/` is the published user documentation: one page per job (overview, getting started,
+  dialects, the record, rules and categories, integrating). Write for a user who installs and runs
+  shellspec: examples first, no `§` references, no `file:line`, no internal jargon. Every command,
+  flag, field and output shown is checked against the code; output is real output, abridged where
+  marked.
+- `design/` and `research/` are internal notes and are not published.
 
 ## Layout
 
@@ -42,15 +55,16 @@ code uses it; the CLI is an `ess-cli/2` binding.
   `## [Unreleased]` takes a line for each change a user of the library or binary sees).
 - `website/`: the public documentation site at `https://beyond10x.github.io/shellspec/`
   (Docusaurus on `@beyond10x/docs-system`, pinned by commit in `package.json`). Its pages are
-  `docs/design.md` and `research/*.md`, read in place; `docusaurus.config.ts` gives each its
-  route, title and header (`pages`). `product.json` is the landing page, drawn by
-  `src/pages/index.tsx`. `.npmrc` sets `allow-git=root` for the Git-pinned dependency. A new file
-  in `docs/` needs an `include` pattern and a `pages` entry; a new file in `research/` needs a
-  `pages` entry. A Markdown link to a file the site does not publish fails the build, so link
-  such files by GitHub URL. `task site` builds it as CI does.
+  `docs/*.md`, read in place; `docusaurus.config.ts` gives each its route, title and lede
+  (`pages`), and `sidebars.ts` lists them. `product.json` is the landing page, drawn by
+  `src/pages/index.tsx`. `.npmrc` sets `allow-git=root` for the Git-pinned dependency. A new
+  file in `docs/` needs a `pages` entry and a sidebar entry. A Markdown link to a file the site
+  does not publish fails the build, so link such files by GitHub URL. `task site` builds it as CI
+  does.
 - `.github/workflows/pages.yml` (`Documentation validation`): classifies the changed files
-  (`website/`, `docs/`, `research/` are the site; `crates/`, `spec/`, `generated/` and every
-  other non-Markdown file are code; other `*.md` is planning), builds the site, refuses a machine
+  (`website/` and `docs/` are the site; `crates/`, `spec/`, `generated/` and every other
+  non-Markdown file are code; other `*.md`, `design/` and `research/` included, is planning),
+  builds the site, refuses a machine
   path in it, writes `.well-known/b10x-site.json` and on `main` uploads the artifact
   `b10x-project-site`. Its job `Repository gate` runs `task check` for the class `code` with the
   rustc of `rust-toolchain.toml` and `task`, `cargo-nextest` and `ess` downloaded at a pinned

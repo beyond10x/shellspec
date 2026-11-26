@@ -1,4 +1,4 @@
-//! bash, POSIX sh and zsh input through `brush-parser` (docs/design.md § 5.2). brush gives char
+//! bash, POSIX sh and zsh input through `brush-parser` (design/design.md § 5.2). brush gives char
 //! indices; they are converted to bytes here. Words come back as strings and are re-parsed with
 //! brush's word parser.
 

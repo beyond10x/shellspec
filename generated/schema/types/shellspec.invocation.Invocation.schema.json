@@ -4,7 +4,7 @@
   "x-ess-provenance": {
     "system": "shellspec",
     "specification_version": "v1",
-    "contract_digest": "slice-sha256/2:c732dbde876d5495615bb80d8431345b65b2d6b8c4bd093d7d7e04dab06c8aba",
+    "contract_digest": "slice-sha256/2:90a120035309008942a01d44ed99171b4c51cc9236c90c418bba78a5d08ea656",
     "regenerate": "ess generate"
   },
   "$defs": {
@@ -256,7 +256,7 @@
     },
     "shellspec.syntax.UnkReason": {
       "title": "UnkReason",
-      "description": "Why shellspec could not say (docs/design.md § 3.3): a region the parser refused, a construct of another dialect, a dynamic program word, a static program no rule names, a nested script deeper than 3.",
+      "description": "Why shellspec could not say (design/design.md § 3.3): a region the parser refused, a construct of another dialect, a dynamic program word, a static program no rule names, a nested script deeper than 3.",
       "x-ess-name": "shellspec.syntax.UnkReason",
       "x-ess-kind": "enum",
       "type": "string",

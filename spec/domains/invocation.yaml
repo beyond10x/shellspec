@@ -1,7 +1,7 @@
 domain: shellspec.invocation
 
 summary: >-
-  The flat view of a script (docs/design.md § 3.4): one invocation per simple command, in
+  The flat view of a script (design/design.md § 3.4): one invocation per simple command, in
   execution order, including those inside substitutions, subshells, compound bodies, heredoc bodies
   and nested scripts, each with its category (§ 6).
 

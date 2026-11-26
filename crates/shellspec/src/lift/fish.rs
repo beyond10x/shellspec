@@ -1,4 +1,4 @@
-//! fish input through `tree-sitter-fish` (docs/design.md § 5.5). The grammar recovers from
+//! fish input through `tree-sitter-fish` (design/design.md § 5.5). The grammar recovers from
 //! errors: a statement that holds an error node becomes `Unk`, its siblings stay lifted.
 
 use tree_sitter::Node as TsNode;

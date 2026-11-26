@@ -1,7 +1,7 @@
 domain: shellspec.word
 
 summary: >-
-  Words and redirects (docs/design.md § 3). A word is a list of parts that keep what the shell
+  Words and redirects (design/design.md § 3). A word is a list of parts that keep what the shell
   would do with them without doing it. A word is static when every part is literal or quoted text
   without expansion; only then is its value known.
 

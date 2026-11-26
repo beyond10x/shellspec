@@ -4,37 +4,55 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {withProductSite} from '@beyond10x/docs-system/product-site';
 
-// The documentation pages are the repository's own Markdown, read in place from the repository
-// root: docs/design.md and research/. Nothing is copied into website/. The table below gives each
-// file its route, its title and the header the docs-system theme draws over it (lede, status,
-// source link); the files themselves stay as they are on GitHub. The landing page is
-// src/pages/index.tsx, which draws product.json with the docs-system product template.
+// The documentation pages are the Markdown files of docs/, read in place from the repository
+// root. Nothing is copied into website/. The table below gives each file its route, its title and
+// the lede the docs-system theme draws over it. The landing page is src/pages/index.tsx, which
+// draws product.json with the docs-system product template. design/ and research/ hold internal
+// notes and are not published.
 
 const siteDir = path.dirname(fileURLToPath(import.meta.url));
-const repositoryRoot = path.resolve(siteDir, '..');
-const sourceBase = 'https://github.com/beyond10x/shellspec/blob/main/';
-
-const releaseState = 'No release yet: the library and the shellspec binary build from source.';
+const repositoryRoot = path.resolve(siteDir, "..");
+const sourceBase = "https://github.com/beyond10x/shellspec/blob/main/";
 
 interface Page {
   slug: string;
   title: string;
   sidebar_label?: string;
   lede: string;
-  status?: 'planned';
 }
 
 const pages: Record<string, Page> = {
-  'docs/design.md': {
-    slug: '/',
-    title: 'Design',
-    lede: `What shellspec lifts, the IR, the parsers, the categories and the ruleset. ${releaseState} The specification in spec/ is authoritative where this page differs.`,
+  "docs/index.md": {
+    slug: "/",
+    title: "shellspec",
+    sidebar_label: "Overview",
+    lede: "Lift the shell command strings an agent sends into one tree, and give every simple command in them a category.",
   },
-  'research/2026-11-26-corpus.md': {
-    slug: '/research/corpus',
-    title: 'Corpus: 72 hours of Bash tool commands',
-    sidebar_label: 'Corpus',
-    lede: 'Counts and generic shapes over 331,797 Bash tool commands of one workstation; no command text.',
+  "docs/getting-started.md": {
+    slug: "/getting-started",
+    title: "Getting started",
+    lede: "Build the command-line tool, classify a first command, and call the library.",
+  },
+  "docs/dialects.md": {
+    slug: "/dialects",
+    title: "Dialects",
+    lede: "bash, sh, zsh and fish lift into the same tree. What each supports, and what becomes unk.",
+  },
+  "docs/record.md": {
+    slug: "/record",
+    title: "The record",
+    lede: "The tree, the words, the invocation list, the dominant invocation and the redacted shape.",
+  },
+  "docs/rules.md": {
+    slug: "/rules",
+    title: "Rules and categories",
+    lede: "The 21 categories, how a rule matches, and how to write and check your own rules.",
+  },
+  "docs/integrating.md": {
+    slug: "/integrating",
+    title: "Using shellspec from another tool",
+    sidebar_label: "Integrating",
+    lede: "The library functions, JSON output for other languages, corpus counts and storing records without their values.",
   },
 };
 
@@ -83,7 +101,7 @@ const config: Config = {
       {
         docs: {
           path: '..',
-          include: ['docs/design.md', 'research/*.md'],
+          include: ["docs/*.md"],
           sidebarPath: './sidebars.ts',
           routeBasePath: 'docs',
           editUrl: 'https://github.com/beyond10x/shellspec/tree/main/',
@@ -95,27 +113,26 @@ const config: Config = {
 
   themeConfig: {
     navbar: {
-      title: 'shellspec',
+      title: "shellspec",
       items: [
-        {to: '/docs/', label: 'Design', position: 'left', activeBaseRegex: '^/shellspec/docs/?$'},
-        {to: '/docs/research/corpus', label: 'Research', position: 'left', activeBaseRegex: '^/shellspec/docs/research'},
-        {href: 'https://github.com/beyond10x/shellspec', label: 'GitHub', position: 'right'},
+        {to: "/docs/", label: "Docs", position: "left", activeBaseRegex: "^/shellspec/docs"},
+        {href: "https://github.com/beyond10x/shellspec", label: "GitHub", position: "right"},
       ],
     },
     footer: {
       links: [
         {
-          title: 'Documentation',
+          title: "Documentation",
           items: [
-            {label: 'Design', to: '/docs/'},
-            {label: 'Corpus', to: '/docs/research/corpus'},
+            {label: "Getting started", to: "/docs/getting-started"},
+            {label: "Rules and categories", to: "/docs/rules"},
           ],
         },
         {
-          title: 'Project',
+          title: "Project",
           items: [
-            {label: 'Source', href: 'https://github.com/beyond10x/shellspec'},
-            {label: 'README', href: 'https://github.com/beyond10x/shellspec/blob/main/README.md'},
+            {label: "Source", href: "https://github.com/beyond10x/shellspec"},
+            {label: "Changelog", href: "https://github.com/beyond10x/shellspec/blob/main/CHANGELOG.md"},
           ],
         },
       ],

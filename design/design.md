@@ -1,10 +1,10 @@
-# shellspec design (draft, 2026-11-26)
+# shellspec design notes
 
-Status: implementation opened 2026-11-26 (AGENTS.md § Phase). Field names below were proposals; the specification in `spec/` is authoritative.
+Internal design notes. The specification in `spec/` is authoritative where these notes differ. The user documentation is in `docs/`.
 
 ## 1. Why
 
-The owner, 2026-11-26: Claude Code's Bash tool sends long pipelined strings, such as
+Claude Code's Bash tool sends long pipelined strings, such as
 `cd x && foo | grep y; bar || baz 2>&1 | tail`. Each one is a shell script, not one process run.
 `research/2026-11-26-corpus.md` measured 331,797 such strings in 72 hours of transcripts:
 96.4 % hold at least one of `&&`, `||`, `;` or `|`; the median call runs 5 simple commands, the
@@ -19,7 +19,7 @@ command string ──parse(dialect)──▶ syntax tree ──lift──▶ she
  + dialect                         (parser's own)        (one form)                      (flat list, categorised)
 ```
 
-First consumer: `sessionspec` (`docs/design.md` there). Its `ToolCall` of category execute is
+First consumer: `sessionspec` (`design/design.md` there). Its `ToolCall` of category execute is
 lifted through shellspec into sub-commands, and each sub-command gets a category (§ 6).
 
 ## 2. Scope
@@ -370,7 +370,7 @@ ToolCall { tool: "Bash", category: execute, input.command, cwd }
 
 ### 7.2 `b10x guard bash`
 
-Source: `agentplugins` `crates/b10x/src/guard.rs` on an unmerged branch of 2026-10-28; it is not
+Source: `agentplugins` `crates/b10x/src/guard.rs` on an unmerged branch; it is not
 on `main`, and an installed `b10x` binary carries
 its strings. 1,307 lines; it parses with tree-sitter-bash and has its own walker for what
 shellspec's IR does: simple commands inside `$(…)`, wrappers (`env`, `timeout`, `sudo`,
@@ -389,14 +389,11 @@ before; until then nothing changes in agentplugins.
 also lifts shell calls with tree-sitter-bash into semantic kinds (`file.read`,
 `stream.select`, `vcs.status`, `validation.test`, `network.fetch`, `process.run`). Its kinds are
 the closest prior art for § 6 and were read for it. It is a candidate consumer; no change is
-proposed there (the owner, 2026-11-26, on sessionspec: "Maybe let's not use the meta harness
-thing").
+proposed there.
 
 ## 8. Specification first (ESS)
 
-The workspace `AGENTS.md` has no ESS section of its own; the rule comes from the `*spec` and tool
-repositories (`ratchet/AGENTS.md` § "Specification first (ESS)", the owner 2026-11-24: "just do
-ESS upfront"). shellspec follows it: every noun below is declared in an ESS specification and
+shellspec is specified first, like the other `*spec` and tool repositories: every noun below is declared in an ESS specification and
 `ess specify validate` passes before code uses it; the CLI is an `ess-cli/2` binding
 (`ess/docs/design/cli-presentation-binding.md`), and its parser comes from `ess generate cli`.
 
@@ -433,22 +430,19 @@ CLI (`ess-cli/2`, binary `shellspec`, proposal):
 3. The first ruleset, covering the top first words of § 4; `unk` share measured.
 4. sessionspec's Claude Code adapter calls `invocations`.
 5. fish lifting.
-6. `b10x guard bash` on shellspec (§ 7.2), when the owner of agentplugins agrees.
+6. `b10x guard bash` on shellspec (§ 7.2), when the agentplugins maintainers agree.
 
-## 10. Open, with the default taken
+## 10. Choices and their alternatives
 
-- Q1. Parser for bash, sh and zsh. Default A: `brush-parser`. B: `rable` (equal accuracy, young).
-  C: `tree-sitter-bash` (recovers, mis-nests the common shape).
-- Q2. zsh. Default A: parse with brush's bash mode, zsh-only refusals as `Unk`. B: add
-  `tree-sitter-zsh` now.
-- Q3. fish. Default A: `tree-sitter-fish`, built last. B: fish's own parser as a git dependency
-  (GPL-2.0).
-- Q4. Ruleset. Default A: YAML data in the repository, declared as an ESS noun, with a digest.
-  B: a Rust table.
-- Q5. Category list. Default A: the 21 categories of § 6.1, mapped down to sessionspec's tool
-  list (§ 7.1). B: sessionspec's list only.
-- Q6. `b10x guard bash`. Default A: becomes a consumer once `shell-ir/1` is stable; no change in
-  agentplugins now. Its source is on an unmerged branch, which the owner
-  of agentplugins should know.
-- Q7. How sessionspec uses shellspec. Default A: a Rust library dependency; the CLI is only for
-  inspection and corpus runs.
+- Parser for bash, sh and zsh: `brush-parser`. Alternatives: `rable` (equal accuracy, young),
+  `tree-sitter-bash` (recovers, mis-nests the common shape).
+- zsh: parsed with brush's bash mode, zsh-only refusals as `Unk`. Alternative: `tree-sitter-zsh`.
+- fish: `tree-sitter-fish`. Alternative: fish's own parser as a git dependency (GPL-2.0).
+- Ruleset: YAML data in the repository, declared as an ESS noun, with a digest. Alternative: a
+  Rust table.
+- Category list: the 21 categories of § 6.1, mapped down to sessionspec's tool list (§ 7.1).
+  Alternative: sessionspec's list only.
+- `b10x guard bash`: becomes a consumer once `shell-ir/1` is stable; no change in agentplugins
+  now.
+- sessionspec uses shellspec as a Rust library dependency; the CLI is for inspection and corpus
+  runs.
